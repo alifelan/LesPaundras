@@ -2,32 +2,40 @@ package com.example.taxiunico_lespaundras
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.widget.TextView
 
 class NavbarActivity : AppCompatActivity() {
 
-    private lateinit var textMessage: TextView
+    val fragmentManager = supportFragmentManager
+
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-                textMessage.setText(R.string.title_home)
+                loadFragment(FragmentHome())
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
-                textMessage.setText(R.string.title_dashboard)
+            R.id.navigation_trips -> {
+                loadFragment(FragmentTrips())
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
-                textMessage.setText(R.string.title_notifications)
+            R.id.navigation_account -> {
+                loadFragment(FragmentAccount())
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_add_travel -> {
-                textMessage.setText(R.string.add_travel)
+            R.id.navigation_add_trip -> {
+                loadFragment(FragmentAddTrip())
                 return@OnNavigationItemSelectedListener true
             }
         }
         false
+    }
+
+    fun loadFragment(selectedFragment: Fragment) {
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, selectedFragment)
+        //transaction.addToBackStack(null)  // enables back button with navbar items
+        transaction.commit()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +43,9 @@ class NavbarActivity : AppCompatActivity() {
         setContentView(R.layout.activity_navbar)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
-        textMessage = findViewById(R.id.message)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
+        // load home fragment first
+        fragmentManager.beginTransaction().add(R.id.fragment_container, FragmentHome()).commit()
     }
 }
