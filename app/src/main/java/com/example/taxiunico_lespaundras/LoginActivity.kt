@@ -23,6 +23,7 @@ import android.widget.TextView
 
 import java.util.ArrayList
 import android.Manifest.permission.READ_CONTACTS
+import android.content.Intent
 
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -38,6 +39,16 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        // Generate travel code and put it in textView and in clipboard
+        // TODO: Generate real code
+        // TODO: Copy code to clipboard when button is pressed
+        var codeNumber: Int = 1
+        button_code.setOnClickListener {
+            text_code.text = "newCode" + codeNumber.toString()
+            codeNumber++
+        }
+
         // Set up the login form.
         populateAutoComplete()
         password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
@@ -49,6 +60,12 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         })
 
         email_sign_in_button.setOnClickListener { attemptLogin() }
+
+        // PLACEHOLDER. go to navbar activity intent
+        button_goto_navbar.setOnClickListener {
+            val navbarIntent = Intent(this, NavbarActivity::class.java)
+            startActivity(navbarIntent)
+        }
     }
 
     private fun populateAutoComplete() {
