@@ -34,7 +34,7 @@ class NavbarActivity : AppCompatActivity() {
     fun loadFragment(selectedFragment: Fragment) {
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, selectedFragment)
-        //transaction.addToBackStack(null)  // enables back button with navbar items
+        transaction.addToBackStack(null)  // enables back button with navbar items
         transaction.commit()
     }
 
