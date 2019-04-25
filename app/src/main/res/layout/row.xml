@@ -31,7 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/row_text_price"
-            app:layout_constraintBottom_toTopOf=""
             app:layout_constraintLeft_toLeftOf="parent"/>
 
     <ImageView
