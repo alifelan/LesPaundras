@@ -46,6 +46,7 @@ class NavbarActivity : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         // load home fragment first
-        fragmentManager.beginTransaction().add(R.id.fragment_container, FragmentHome()).commit()
+        if(savedInstanceState == null)
+            fragmentManager.beginTransaction().add(R.id.fragment_container, FragmentHome()).commit()
     }
 }
