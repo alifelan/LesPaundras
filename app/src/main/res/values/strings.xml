@@ -18,10 +18,22 @@
     <!-- Strings related to navigation bar -->
     <string name="title_activity_navbar">NavbarActivity</string>
     <string name="title_home">Home</string>
-    <string name="title_trips">Dashboard</string>
-    <string name="title_account">Notifications</string>
+    <string name="title_trips">Trips</string>
+    <string name="title_account">Account</string>
     <string name="title_add_trip">Add trip</string>
     <!-- Strings related to home fragment -->
     <string name="home_current_trip">Current trip</string>
     <string name="home_driver">Your driver:</string>
+    <!-- Strings related to trips fragment -->
+    <string name="trips_past_trips">Past trips</string>
+    <string name="trips_upcoming_trips">Upcoming trips</string>
+    <!-- Strings related to account fragment -->
+    <string name="account_name">Name</string>
+    <string name="account_payment">Credit or debit card number</string>
+    <!-- Strings related to add trip fragment -->
+    <string name="add_trip_enter_code">Enter trip code</string>
+    <string name="add_trip_code_hint">Trip code</string>
+    <!-- Miscellaneous strings -->
+    <string name="button_ok">OK</string>
+    <string name="button_save_changes">Save changes</string>
 </resources>

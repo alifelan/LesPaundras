@@ -3,15 +3,57 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:padding="16dp">
 
     <TextView
+            android:id="@+id/add_trip_text_title"
             android:text="@string/title_add_trip"
+            android:textSize="30sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+            android:id="@+id/add_trip_text_enter_code"
+            android:text="@string/add_trip_enter_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/add_trip_text_title"
+            app:layout_constraintBottom_toTopOf="@id/add_trip_code"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+    <android.support.design.widget.TextInputLayout
+            android:id="@+id/add_trip_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/add_trip_text_enter_code"
+            app:layout_constraintBottom_toTopOf="@id/add_trip_button_ok"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+        <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/add_trip_code_hint"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+            android:id="@+id/add_trip_button_ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_ok"
+            app:layout_constraintTop_toBottomOf="@id/add_trip_code"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+    />
 
 </android.support.constraint.ConstraintLayout>
