@@ -14,7 +14,7 @@ sealed class ApiRoute {
 
     val baseUrl: String
         get() {
-            return "https://taxi-unico-api.herokuapp.com/"
+            return "https://taxi-unico-api.herokuapp.com"
         }
 
     data class Login(var email: String, var password:String, var ctx: Context): ApiRoute()
