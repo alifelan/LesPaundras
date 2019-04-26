@@ -3,6 +3,7 @@ package ApiUtility
 import android.content.Context
 import com.android.volley.Request
 import org.json.JSONObject
+import kotlin.collections.HashMap
 
 
 sealed class ApiRoute {
@@ -18,16 +19,19 @@ sealed class ApiRoute {
         }
 
     data class Login(var email: String, var password:String, var ctx: Context): ApiRoute()
+    data class RandomBusTrip(var ctx: Context): ApiRoute()
 
     val url: String
         get() {
             return "$baseUrl/${when (this@ApiRoute) {
+                is RandomBusTrip -> "randomBusTrip"
                 is Login -> "login"
             }}"
         }
     val httpMethod: Int
         get() {
             return when (this) {
+                is RandomBusTrip -> Request.Method.GET
                 is Login -> Request.Method.GET
             }
         }
@@ -36,6 +40,8 @@ sealed class ApiRoute {
         get() {
             return when (this) {
                 is Login -> JSONObject()
+                is RandomBusTrip -> JSONObject()
+                is Login -> {
             }
         }
 
