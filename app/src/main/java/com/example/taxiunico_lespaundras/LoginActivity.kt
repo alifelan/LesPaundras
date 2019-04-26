@@ -1,5 +1,6 @@
 package com.example.taxiunico_lespaundras
 
+import ApiUtility.ApiClient
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
@@ -41,12 +42,10 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         setContentView(R.layout.activity_login)
 
         // Generate travel code and put it in textView and in clipboard
-        // TODO: Generate real code
-        // TODO: Copy code to clipboard when button is pressed
-        var codeNumber: Int = 1
         button_code.setOnClickListener {
-            text_code.text = "newCode" + codeNumber.toString()
-            codeNumber++
+            ApiClient(this).getRandomBusTrip{ id, _ ->
+                text_code.text = id
+            }
         }
 
         // Set up the login form.
