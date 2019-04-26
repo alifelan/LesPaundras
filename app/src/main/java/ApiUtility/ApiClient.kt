@@ -69,8 +69,7 @@ class ApiClient(private val ctx: Context) {
     fun getRandomBusTrip(completion: (randomTrip: String?, message: String) -> Unit) {
         val route = ApiRoute.RandomBusTrip(ctx)
         this.performRequest(route) {success, response ->
-            val j = response.json
-            val id = response.json.getJSONObject("BusTrip").getString("id")
+            val id = response.json.getString("id")
             if(success)
                 completion.invoke(id, "")
             else
