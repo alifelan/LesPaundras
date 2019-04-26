@@ -8,9 +8,9 @@ class ApiResponse(public var json: JSONObject) {
     var success: Boolean = true
 
     init {
-        if(json.has("message")) {
-            message = json.getString("message")
-            success = false
+        if(json.has("status")) {
+            message = json.getString("status")
+            success = message != "false"
         }
     }
 
