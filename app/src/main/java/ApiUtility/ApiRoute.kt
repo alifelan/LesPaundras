@@ -36,15 +36,14 @@ sealed class ApiRoute {
             }
         }
 
-    val body: JSONObject
+    val body: JSONObject?
         get() {
             return when (this) {
-                is RandomBusTrip -> JSONObject()
+                is RandomBusTrip -> null
                 is Login -> {
                     val json = JSONObject()
                     json.put("email", this.email)
                     json.put("password", this.password)
-                    json
                 }
             }
         }
