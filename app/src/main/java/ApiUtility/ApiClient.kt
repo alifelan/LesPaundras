@@ -14,18 +14,20 @@ class ApiClient(private val ctx: Context) {
      * PERFORM REQUEST
      */
     private fun performRequest(route: ApiRoute, completion: (success: Boolean, apiResponse: ApiResponse) -> Unit) {
-        val request: JsonObjectRequest = object : JsonObjectRequest(route.httpMethod, route.url, route.params, { response ->
+        val request: JsonObjectRequest = object : JsonObjectRequest(route.httpMethod, route.url, route.body, { response ->
             this.handle(response, completion)
         }, {
             it.printStackTrace()
             if (it.networkResponse != null && it.networkResponse.data != null)
-                this.handle(JSONObject().apply { put("message", String(it.networkResponse.data))}, completion)
+                this.handle(JSONObject().apply {
+                    put("message", String(it.networkResponse.data))
+                    put("status", "false")}, completion)
             else
-                this.handle(JSONObject().apply { put("message", getStringError(it)) }, completion)
+                this.handle(JSONObject().apply {
+                    put("message", getStringError(it))
+                    put("status", "false")}, completion)
         }) {
-            override fun getHeaders(): MutableMap<String, String> {
-                return route.headers
-            }
+            override fun getHeaders(): MutableMap<String, String> = route.headers
         }
         request.retryPolicy = DefaultRetryPolicy(route.timeOut, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         getRequestQueue().add(request)
