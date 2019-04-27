@@ -79,7 +79,7 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
-    fun login(email: String, password: String, completion: (status: Boolean, message: String) -> Unit) {
+    fun login(email: String, password: String, completion: (logged: Boolean, message: String) -> Unit) {
         val route = ApiRoute.Login(email, password,ctx)
         this.performRequest(route) { success, response ->
             completion.invoke(success, response.message)
