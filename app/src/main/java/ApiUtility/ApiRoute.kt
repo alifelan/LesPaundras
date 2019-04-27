@@ -25,26 +25,25 @@ sealed class ApiRoute {
         get() {
             return "$baseUrl/${when (this@ApiRoute) {
                 is RandomBusTrip -> "randomBusTrip"
-                is Login -> "login"
+                is Login -> "login/"
             }}"
         }
     val httpMethod: Int
         get() {
             return when (this) {
                 is RandomBusTrip -> Request.Method.GET
-                is Login -> Request.Method.GET
+                is Login -> Request.Method.POST
             }
         }
 
-    val params: JSONObject
+    val body: JSONObject?
         get() {
             return when (this) {
-                is RandomBusTrip -> JSONObject()
+                is RandomBusTrip -> null
                 is Login -> {
                     val json = JSONObject()
                     json.put("email", this.email)
                     json.put("password", this.password)
-                    json
                 }
             }
         }
@@ -53,7 +52,7 @@ sealed class ApiRoute {
         get() {
             val map: HashMap<String, String> = hashMapOf()
             map["Accept"] = "application/json"
-            map["Content-Type"] = "application/json"
+            map["Content-Type"] = "application/json; charset=utf-8"
             return map
         }
 

@@ -7,13 +7,14 @@ class ApiResponse(public var json: JSONObject) {
     var message: String = ""
     var success: Boolean = true
 
-    private val data = "data"
-    private val msg = "error"
-
     init {
-        if(json.has("message")) {
-            message = json.getString("message")
-            success = false
+        if(json.has("status")) {
+            if(json.optString("status") != null) {
+                success = json.getString("status") != "false"
+            }
+            if(json.optString("message") != null) {
+                message = json.getString("message")
+            }
         }
     }
 
