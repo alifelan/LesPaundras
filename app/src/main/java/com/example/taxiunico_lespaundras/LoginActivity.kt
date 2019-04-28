@@ -61,6 +61,11 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
         email_sign_in_button.setOnClickListener { attemptLogin() }
 
+        email_register_button.setOnClickListener {
+            val registerIntent = Intent(applicationContext,RegisterActivity::class.java)
+            startActivity(registerIntent)
+        }
+
         // PLACEHOLDER. go to navbar activity intent
         button_goto_navbar.setOnClickListener {
             val navbarIntent = Intent(this, NavbarActivity::class.java)
