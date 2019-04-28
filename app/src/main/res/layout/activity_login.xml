@@ -99,13 +99,4 @@
                     android:textStyle="bold"/>
         </LinearLayout>
     </ScrollView>
-
-    <Button android:id="@+id/button_goto_navbar"
-            style="?android:textAppearanceSmall"
-            android:text="Go to navbar activity (PLACEHOLDER)"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"/>
-
 </LinearLayout>

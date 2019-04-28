@@ -65,12 +65,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             val registerIntent = Intent(applicationContext,RegisterActivity::class.java)
             startActivity(registerIntent)
         }
-
-        // PLACEHOLDER. go to navbar activity intent
-        button_goto_navbar.setOnClickListener {
-            val navbarIntent = Intent(this, NavbarActivity::class.java)
-            startActivity(navbarIntent)
-        }
     }
 
     private fun populateAutoComplete() {
