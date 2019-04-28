@@ -20,12 +20,14 @@ sealed class ApiRoute {
 
     data class Login(var email: String, var password:String, var ctx: Context): ApiRoute()
     data class RandomBusTrip(var ctx: Context): ApiRoute()
+    data class User(var name: String, var email: String, var password:String, var card: String, var ctx: Context): ApiRoute()
 
     val url: String
         get() {
             return "$baseUrl/${when (this@ApiRoute) {
                 is RandomBusTrip -> "randomBusTrip"
                 is Login -> "login/"
+                is User -> "user/"
             }}"
         }
     val httpMethod: Int
@@ -33,6 +35,7 @@ sealed class ApiRoute {
             return when (this) {
                 is RandomBusTrip -> Request.Method.GET
                 is Login -> Request.Method.POST
+                is User -> Request.Method.POST
             }
         }
 
@@ -44,6 +47,13 @@ sealed class ApiRoute {
                     val json = JSONObject()
                     json.put("email", this.email)
                     json.put("password", this.password)
+                }
+                is User -> {
+                    val json = JSONObject()
+                    json.put("name", this.name)
+                    json.put("email", this.email)
+                    json.put("password", this.password)
+                    json.put("card", this.card)
                 }
             }
         }
