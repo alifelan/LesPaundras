@@ -9,26 +9,9 @@
               android:paddingLeft="@dimen/activity_horizontal_margin"
               android:paddingRight="@dimen/activity_horizontal_margin"
               android:paddingTop="@dimen/activity_vertical_margin"
-              tools:context=".LoginActivity">
+              tools:context=".RegisterActivity">
 
-    <Button android:id="@+id/button_code"
-            style="?android:textAppearanceSmall"
-            android:text="@string/generate_trip_code"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    <TextView
-            android:id="@+id/text_code"
-            android:text="@string/trip_code"
-            android:textIsSelectable="true"
-            style="@style/TextAppearance.AppCompat.Display1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"/>
-
-    <!-- Login progress -->
+    <!-- Text Prompts -->
     <ProgressBar
             android:id="@+id/login_progress"
             style="?android:attr/progressBarStyleLarge"
@@ -73,21 +56,13 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_password"
                         android:imeActionId="6"
+                        android:imeActionLabel="@string/action_sign_in_short"
                         android:imeOptions="actionUnspecified"
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:singleLine="true"/>
 
             </android.support.design.widget.TextInputLayout>
-
-            <Button
-                    android:id="@+id/email_sign_in_button"
-                    style="?android:textAppearanceSmall"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/action_sign_in_short"
-                    android:textStyle="bold"/>
 
             <Button
                     android:id="@+id/email_register_button"
@@ -99,13 +74,5 @@
                     android:textStyle="bold"/>
         </LinearLayout>
     </ScrollView>
-
-    <Button android:id="@+id/button_goto_navbar"
-            style="?android:textAppearanceSmall"
-            android:text="Go to navbar activity (PLACEHOLDER)"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"/>
 
 </LinearLayout>
