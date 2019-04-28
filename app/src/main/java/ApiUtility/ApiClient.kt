@@ -6,6 +6,7 @@ import com.android.volley.toolbox.BasicNetwork
 import com.android.volley.toolbox.DiskBasedCache
 import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.JsonObjectRequest
+import com.google.gson.Gson
 import org.json.JSONObject
 
 class ApiClient(private val ctx: Context) {
@@ -83,6 +84,18 @@ class ApiClient(private val ctx: Context) {
         val route = ApiRoute.Login(email, password,ctx)
         this.performRequest(route) { success, response ->
             completion.invoke(success, response.message)
+        }
+    }
+
+    fun createUser(name: String, email: String, password: String, card: String, completion: (user: User?, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.User(name, email, password, card, ctx)
+        this.performRequest(route) { success, response ->
+            if(success) {
+                val user = Gson().fromJson(response.json.toString(), User::class.java)
+                completion.invoke(user, success, "User registration completed")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
         }
     }
 

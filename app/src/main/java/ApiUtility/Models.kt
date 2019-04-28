@@ -3,7 +3,7 @@ package ApiUtility
 import com.google.gson.annotations.SerializedName
 
 data class User(
-    @SerializedName("name") val name: String,
-    @SerializedName("email") val email: String
+    @SerializedName("name") var name: String = "",
+    @SerializedName("email") var email: String = ""
 ) : JSONConvertable
 
