@@ -154,15 +154,14 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             ApiClient(this).login(emailStr, passwordStr){ logged, message ->
                 showProgress(false)
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-                if (logged) {startNavbarActivity(emailStr, text_code.text.toString())}
+                if (logged) {startNavbarActivity(emailStr)}
             }
         }
     }
 
-    private fun startNavbarActivity(email: String, trip: String) {
+    private fun startNavbarActivity(email: String) {
         val intent = Intent(this, NavbarActivity::class.java)
         intent.putExtra(EMAIL, email)
-        intent.putExtra(TRIP, trip)
         startActivity(intent)
     }
 
@@ -277,6 +276,5 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         private val REQUEST_READ_CONTACTS = 0
         // id to send in intent
         val EMAIL = "EMAIL"
-        val TRIP = "TRIP"
     }
 }
