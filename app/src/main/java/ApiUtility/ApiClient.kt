@@ -21,7 +21,7 @@ class ApiClient(private val ctx: Context) {
             it.printStackTrace()
             if (it.networkResponse != null && it.networkResponse.data != null)
                 this.handle(JSONObject().apply {
-                    put("message", String(it.networkResponse.data))
+                    put("message", JSONObject(String(it.networkResponse.data)).optString("message"))
                     put("status", "false")}, completion)
             else
                 this.handle(JSONObject().apply {
