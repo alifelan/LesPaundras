@@ -18,6 +18,7 @@
     </string>
     <!-- Strings related to navigation bar -->
     <string name="title_activity_navbar">NavbarActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
     <string name="title_home">Home</string>
     <string name="title_trips">Trips</string>
     <string name="title_account">Account</string>
