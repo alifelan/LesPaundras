@@ -24,7 +24,9 @@ import android.widget.TextView
 
 import java.util.ArrayList
 import android.Manifest.permission.READ_CONTACTS
+import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -149,6 +151,10 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         } else {
             // Show a progress spinner
             showProgress(true)
+            ApiClient(this).login(emailStr, passwordStr){ logged, message ->
+                showProgress(false)
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
