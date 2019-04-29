@@ -26,12 +26,22 @@ class RegisterActivity : AppCompatActivity() {
 
         email_register_button.setOnClickListener {
             showProgress(true)
-            ApiClient(applicationContext).createUser(name.text.toString(), email.text.toString(), password.text.toString(), card.text.toString()) { user, success, message ->
-                showProgress(false)
-                Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
-                if(success) {
-                    startNavbarActivity(email.text.toString())
+            if (parametersAreValid()) {
+                ApiClient(applicationContext).createUser(
+                    name.text.toString(),
+                    email.text.toString(),
+                    password.text.toString(),
+                    card.text.toString()
+                ) { _, success, message ->
+                    showProgress(false)
+                    Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+                    if (success) {
+                        startNavbarActivity(email.text.toString())
+                    }
                 }
+            } else {
+                Toast.makeText(this, getString(R.string.form_error), Toast.LENGTH_SHORT).show()
+                showProgress(false)
             }
         }
     }
@@ -40,6 +50,12 @@ class RegisterActivity : AppCompatActivity() {
         val intent = Intent(this, NavbarActivity::class.java)
         intent.putExtra(LoginActivity.EMAIL, email)
         startActivity(intent)
+    }
+
+    private fun parametersAreValid(): Boolean {
+        return !(name.text?.isEmpty() ?: false || email.text.isEmpty() || password.text.isEmpty() || card.text?.isEmpty() ?: false) && email.text.contains(
+            "@"
+        ) && card.text?.length != 16
     }
 
     /**
