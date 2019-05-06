@@ -13,8 +13,12 @@ class FragmentAddTrip : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         add_trip_button_ok.setOnClickListener {
-            val addTripIntent = Intent(activity, AddTripActivity::class.java)
-            startActivity(addTripIntent)
+            if(!text_code.text.isEmpty()) {
+                val addTripIntent = Intent(activity, AddTripActivity::class.java).apply {
+                    putExtra(NavbarActivity.CODE, text_code.text.toString())
+                }
+                startActivity(addTripIntent)
+            }
         }
     }
 

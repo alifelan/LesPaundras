@@ -57,4 +57,8 @@ class NavbarActivity : AppCompatActivity() {
         if(savedInstanceState == null)
             fragmentManager.beginTransaction().add(R.id.fragment_container, FragmentHome()).commit()
     }
+
+    companion object {
+        val CODE : String = "CODE"
+    }
 }
