@@ -41,7 +41,6 @@
 
     <TextView
             android:id="@+id/add_trip_activity_text_src_city"
-            android:text="CENTRAL MTY"
             android:textSize="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,7 +61,6 @@
 
     <TextView
             android:id="@+id/add_trip_activity_text_dest_city"
-            android:text="CENTRAL REYNOSA"
             android:textSize="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

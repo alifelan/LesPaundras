@@ -59,6 +59,6 @@ class NavbarActivity : AppCompatActivity() {
     }
 
     companion object {
-        val CODE : String = "CODE"
+        val TRIP : String = "TRIP"
     }
 }

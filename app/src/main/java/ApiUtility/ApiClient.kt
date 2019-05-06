@@ -122,4 +122,16 @@ class ApiClient(private val ctx: Context) {
             }
         }
     }
+
+    fun getBusTrip(id: String, completion:(trip: BusTrip?, status: Boolean, message:String) -> Unit) {
+        val route = ApiRoute.GetBusTrip(id, ctx)
+        this.performRequest(route) { success, response ->
+            if(success) {
+                val trip = Gson().fromJson(response.json.toString(), BusTrip::class.java)
+                completion.invoke(trip, success, "Trip retrieved successfully")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
 }
