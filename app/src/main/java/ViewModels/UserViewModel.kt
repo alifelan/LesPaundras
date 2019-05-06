@@ -1,4 +1,7 @@
 package ViewModels
 
-class UserViewModel {
+import android.arch.lifecycle.ViewModel
+
+class UserViewModel: ViewModel() {
+    var email = ""
 }
