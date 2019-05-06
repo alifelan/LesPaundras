@@ -1,5 +1,8 @@
 package com.example.taxiunico_lespaundras
 
+import ViewModels.UserViewModel
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -42,6 +45,11 @@ class NavbarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navbar)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
+        if(intent.hasExtra(LoginActivity.EMAIL)) {
+            val model = ViewModelProviders.of(this).get(UserViewModel::class.java)
+            model.email = intent.extras!!.getString(LoginActivity.EMAIL)!!
+        }
 
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 

@@ -99,4 +99,27 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    fun getUser(email : String, completion: (user: User?, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.UserData(email, ctx)
+        this.performRequest(route) { success, response ->
+            if(success) {
+                val user = Gson().fromJson(response.json.toString(), User::class.java)
+                completion.invoke(user, success, "User GET success")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
+
+    fun updateUser(name: String, email: String, password: String, card: String, completion: (user: User?, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.UpdateUser(name, email, password, card, ctx)
+        this.performRequest(route) { success, response ->
+            if(success) {
+                val user = Gson().fromJson(response.json.toString(), User::class.java)
+                completion.invoke(user, success, "User update completed")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
 }
