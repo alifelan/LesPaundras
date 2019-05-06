@@ -4,7 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class User(
     @SerializedName("name") var name: String = "",
-    @SerializedName("email") var email: String = ""
+    @SerializedName("email") var email: String = "",
+    @SerializedName("rating") var rating : Int = 0,
+    @SerializedName("trips") var trips : Int = 0
 ) : JSONConvertable
 
 data class Place(
