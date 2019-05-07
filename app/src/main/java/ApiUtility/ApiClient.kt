@@ -151,5 +151,29 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    fun getDirections(origin: String, destination: String, completion:(polylines: MutableList<String>?, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.GetDirections(origin, destination, ctx)
+        this.performRequest(route) { success, response ->
+            if(success) {
+                val routes = response.json.getJSONArray("routes")
+                if(routes.length() == 0) {
+                    completion.invoke(null, false, "No routes found")
+                } else {
+                    val legs = routes.getJSONObject(0).getJSONArray("legs")
+                    val polylines: MutableList<String> = mutableListOf()
+                    for(i in 0 until legs.length()) {
+                        val steps = legs.getJSONArray(i)
+                        for(j in 0 until steps.length()) {
+                            polylines.add(steps.getJSONObject(j).getJSONObject("polyline").getString("points"))
+                        }
+                    }
+                    completion.invoke(polylines, success, "Route found")
+                }
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
+
 
 }
