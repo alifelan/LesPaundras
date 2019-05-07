@@ -1,6 +1,7 @@
 package ApiUtility
 
 import android.os.Parcelable
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
@@ -30,8 +31,15 @@ data class BusTrip(
 ) : JSONConvertable, Parcelable
 
 @Parcelize
-data class Coordinates(
-    var lat: Double,
-    var lng: Double
+data class ValueText(
+    @SerializedName("value") var value: Int = 0,
+    @SerializedName("text") var text: String = ""
+): JSONConvertable, Parcelable
+
+@Parcelize
+data class Route(
+    var points: List<LatLng>,
+    var duration: ValueText,
+    var distance: ValueText
 ) : Parcelable
 
