@@ -61,7 +61,7 @@ sealed class ApiRoute {
                 is GetDirections -> "$directionsUrl/json?origin=${this.origin.replace(
                     ' ',
                     '+'
-                )}&destination=${this.destination.replace(' ', '+')}&key=$API_KEY"
+                )}&destination=${this.destination.replace(' ', '+')}&units=metric&key=$API_KEY"
             }
         }
     val httpMethod: Int
