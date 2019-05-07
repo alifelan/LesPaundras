@@ -29,3 +29,9 @@ data class BusTrip(
     @SerializedName("arrival_date") var arrival_date: String = ""
 ) : JSONConvertable, Parcelable
 
+@Parcelize
+data class Coordinates(
+    var lat: Double,
+    var lng: Double
+) : Parcelable
+

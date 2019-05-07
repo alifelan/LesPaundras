@@ -18,23 +18,32 @@ sealed class ApiRoute {
             return "http://taxi-unico-api.herokuapp.com"
         }
 
+    val geoCodingUrl: String
+        get() {
+            return "https://maps.googleapis.com/maps/api/geocode"
+        }
+
+    val API_KEY: String = "AIzaSyDQVUiK_t-ui74iRfPc3phKkJltx6YO4bc"
+
     data class Login(var email: String, var password:String, var ctx: Context): ApiRoute()
     data class RandomBusTrip(var ctx: Context): ApiRoute()
     data class User(var name: String, var email: String, var password:String, var card: String, var ctx: Context): ApiRoute()
     data class UpdateUser(var name: String, var email: String, var password: String, var card: String, var ctx: Context) : ApiRoute()
     data class UserData(var email: String, var ctx: Context) : ApiRoute()
     data class GetBusTrip(var id: String, var ctx: Context) : ApiRoute()
+    data class GetGeoCoding(var adddress: String, var ctx: Context) : ApiRoute()
 
     val url: String
         get() {
-            return "$baseUrl/${when (this@ApiRoute) {
-                is RandomBusTrip -> "randomBusTrip"
-                is Login -> "login/"
-                is User -> "user/"
-                is UpdateUser -> "user/"
-                is UserData -> "user/${this.email}"
-                is GetBusTrip -> "busTrip/${this.id}"
-            }}"
+            return when (this){
+                is RandomBusTrip -> "$baseUrl/randomBusTrip"
+                is Login -> "$baseUrl/login/"
+                is User -> "$baseUrl/user/"
+                is UpdateUser -> "$baseUrl/user/"
+                is UserData -> "$baseUrl/user/${this.email}"
+                is GetBusTrip -> "$baseUrl/busTrip/${this.id}"
+                is GetGeoCoding -> "$geoCodingUrl/json?address=${this.adddress.replace(' ', '+')}&key=$API_KEY"
+            }
         }
     val httpMethod: Int
         get() {
@@ -45,6 +54,7 @@ sealed class ApiRoute {
                 is UpdateUser -> Request.Method.PUT
                 is UserData -> Request.Method.GET
                 is GetBusTrip -> Request.Method.GET
+                is GetGeoCoding -> Request.Method.GET
             }
         }
 
@@ -78,6 +88,7 @@ sealed class ApiRoute {
                 }
                 is UserData -> null
                 is GetBusTrip -> null
+                is GetGeoCoding -> null
             }
         }
 

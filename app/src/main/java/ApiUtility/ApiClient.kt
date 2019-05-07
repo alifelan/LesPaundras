@@ -134,4 +134,22 @@ class ApiClient(private val ctx: Context) {
             }
         }
     }
+
+    fun getCoordinates(address: String, completion:(coord: Coordinates?, status: Boolean, message:String) -> Unit) {
+        val route = ApiRoute.GetGeoCoding(address, ctx)
+        this.performRequest(route) { success, response ->
+            if(success) {
+                val geometry = response.json.getJSONObject("geometry")
+                val location = geometry.getJSONObject("location")
+                val lat = location.getDouble("lat")
+                val lng = location.getDouble("lng")
+                val coord = Coordinates(lat, lng)
+                completion.invoke(coord, success, "Geocoding complete")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
+
+
 }
