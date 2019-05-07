@@ -6,6 +6,7 @@ import com.android.volley.toolbox.BasicNetwork
 import com.android.volley.toolbox.DiskBasedCache
 import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.JsonObjectRequest
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import org.json.JSONObject
 
@@ -135,7 +136,7 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
-    fun getCoordinates(address: String, completion:(coord: Coordinates?, status: Boolean, message:String) -> Unit) {
+    fun getCoordinates(address: String, completion:(coord: LatLng?, status: Boolean, message:String) -> Unit) {
         val route = ApiRoute.GetGeoCoding(address, ctx)
         this.performRequest(route) { success, response ->
             if(success) {
@@ -143,7 +144,7 @@ class ApiClient(private val ctx: Context) {
                 val location = geometry.getJSONObject("location")
                 val lat = location.getDouble("lat")
                 val lng = location.getDouble("lng")
-                val coord = Coordinates(lat, lng)
+                val coord = LatLng(lat, lng)
                 completion.invoke(coord, success, "Geocoding complete")
             } else {
                 completion.invoke(null, success, response.message)
@@ -151,7 +152,44 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
-    fun getDirections(origin: String, destination: String, completion:(polylines: MutableList<String>?, status: Boolean, message: String) -> Unit) {
+    private fun decodePoly(encoded: String): List<LatLng> {
+        val poly = ArrayList<LatLng>()
+        var index = 0
+        val len = encoded.length
+        var lat = 0
+        var lng = 0
+
+        while (index < len) {
+            var b: Int
+            var shift = 0
+            var result = 0
+            do {
+                b = encoded[index++].toInt() - 63
+                result = result or (b and 0x1f shl shift)
+                shift += 5
+            } while (b >= 0x20)
+            val dlat = if (result and 1 != 0) (result shr 1).inv() else result shr 1
+            lat += dlat
+
+            shift = 0
+            result = 0
+            do {
+                b = encoded[index++].toInt() - 63
+                result = result or (b and 0x1f shl shift)
+                shift += 5
+            } while (b >= 0x20)
+            val dlng = if (result and 1 != 0) (result shr 1).inv() else result shr 1
+            lng += dlng
+
+            val p = LatLng(lat.toDouble() / 1E5,
+                lng.toDouble() / 1E5)
+            poly.add(p)
+        }
+
+        return poly
+    }
+
+    fun getDirections(origin: String, destination: String, completion:(route: Route?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetDirections(origin, destination, ctx)
         this.performRequest(route) { success, response ->
             if(success) {
@@ -159,15 +197,19 @@ class ApiClient(private val ctx: Context) {
                 if(routes.length() == 0) {
                     completion.invoke(null, false, "No routes found")
                 } else {
-                    val legs = routes.getJSONObject(0).getJSONArray("legs")
-                    val polylines: MutableList<String> = mutableListOf()
+                    val route = routes.getJSONObject(0)
+                    val legs = route.getJSONArray("legs")
+                    val duration: ValueText = Gson().fromJson(route.getJSONObject("duration").toString(), ValueText::class.java)
+                    val distance: ValueText = Gson().fromJson(route.getJSONObject("distance").toString(), ValueText::class.java)
+                    val points: MutableList<LatLng> = mutableListOf()
                     for(i in 0 until legs.length()) {
                         val steps = legs.getJSONArray(i)
                         for(j in 0 until steps.length()) {
-                            polylines.add(steps.getJSONObject(j).getJSONObject("polyline").getString("points"))
+                            val poly = decodePoly(steps.getJSONObject(j).getJSONObject("polyline").getString("points"))
+                            points.addAll(poly)
                         }
                     }
-                    completion.invoke(polylines, success, "Route found")
+                    completion.invoke(Route(points, duration, distance), success, "Route found")
                 }
             } else {
                 completion.invoke(null, success, response.message)
