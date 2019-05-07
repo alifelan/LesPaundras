@@ -18,21 +18,51 @@ sealed class ApiRoute {
             return "http://taxi-unico-api.herokuapp.com"
         }
 
-    data class Login(var email: String, var password:String, var ctx: Context): ApiRoute()
-    data class RandomBusTrip(var ctx: Context): ApiRoute()
-    data class User(var name: String, var email: String, var password:String, var card: String, var ctx: Context): ApiRoute()
-    data class UpdateUser(var name: String, var email: String, var password: String, var card: String, var ctx: Context) : ApiRoute()
+    val geoCodingUrl: String
+        get() {
+            return "https://maps.googleapis.com/maps/api/geocode"
+        }
+
+    val directionsUrl: String
+        get() {
+            return "https://maps.googleapis.com/maps/api/directions"
+        }
+
+    val API_KEY: String = "AIzaSyDQVUiK_t-ui74iRfPc3phKkJltx6YO4bc"
+
+    data class Login(var email: String, var password: String, var ctx: Context) : ApiRoute()
+    data class RandomBusTrip(var ctx: Context) : ApiRoute()
+    data class User(var name: String, var email: String, var password: String, var card: String, var ctx: Context) :
+        ApiRoute()
+
+    data class UpdateUser(
+        var name: String,
+        var email: String,
+        var password: String,
+        var card: String,
+        var ctx: Context
+    ) : ApiRoute()
+
     data class UserData(var email: String, var ctx: Context) : ApiRoute()
+    data class GetBusTrip(var id: String, var ctx: Context) : ApiRoute()
+    data class GetGeoCoding(var adddress: String, var ctx: Context) : ApiRoute()
+    data class GetDirections(var origin: String, var destination: String, var ctx: Context) : ApiRoute()
 
     val url: String
         get() {
-            return "$baseUrl/${when (this@ApiRoute) {
-                is RandomBusTrip -> "randomBusTrip"
-                is Login -> "login/"
-                is User -> "user/"
-                is UpdateUser -> "user/"
-                is UserData -> "user/${this.email}"
-            }}"
+            return when (this) {
+                is RandomBusTrip -> "$baseUrl/randomBusTrip"
+                is Login -> "$baseUrl/login/"
+                is User -> "$baseUrl/user/"
+                is UpdateUser -> "$baseUrl/user/"
+                is UserData -> "$baseUrl/user/${this.email}"
+                is GetBusTrip -> "$baseUrl/busTrip/${this.id}"
+                is GetGeoCoding -> "$geoCodingUrl/json?address=${this.adddress.replace(' ', '+')}&key=$API_KEY"
+                is GetDirections -> "$directionsUrl/json?origin=${this.origin.replace(
+                    ' ',
+                    '+'
+                )}&destination=${this.destination.replace(' ', '+')}&units=metric&key=$API_KEY"
+            }
         }
     val httpMethod: Int
         get() {
@@ -42,6 +72,9 @@ sealed class ApiRoute {
                 is User -> Request.Method.POST
                 is UpdateUser -> Request.Method.PUT
                 is UserData -> Request.Method.GET
+                is GetBusTrip -> Request.Method.GET
+                is GetGeoCoding -> Request.Method.GET
+                is GetDirections -> Request.Method.GET
             }
         }
 
@@ -65,15 +98,18 @@ sealed class ApiRoute {
                     val json = JSONObject()
                     json.put("name", this.name)
                     json.put("email", this.email)
-                    if(this.password != "") {
+                    if (this.password != "") {
                         json.put("password", this.password)
                     }
-                    if(this.card != "") {
+                    if (this.card != "") {
                         json.put("card", this.card)
                     }
                     json
                 }
                 is UserData -> null
+                is GetBusTrip -> null
+                is GetGeoCoding -> null
+                is GetDirections -> null
             }
         }
 

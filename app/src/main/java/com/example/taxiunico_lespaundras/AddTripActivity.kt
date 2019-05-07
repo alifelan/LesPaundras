@@ -1,16 +1,26 @@
 package com.example.taxiunico_lespaundras
 
+import ApiUtility.ApiClient
+import ApiUtility.BusTrip
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_add_trip.*
 
 class AddTripActivity : AppCompatActivity() {
 
+    lateinit var trip: BusTrip
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_trip)
+
+        trip = intent.extras.getParcelable(NavbarActivity.TRIP)
+
+        add_trip_activity_text_src_city.text = trip.origin.name
+        add_trip_activity_text_dest_city.text = trip.destination.name
 
         // back button
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -30,6 +40,19 @@ class AddTripActivity : AppCompatActivity() {
 
     companion object {
         const val SRCDEST: String = "srcDest"
+        const val CURRENT_TRIP: String ="current"
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putParcelable(CURRENT_TRIP, trip)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        trip = savedInstanceState?.getParcelable(CURRENT_TRIP)!!
+        add_trip_activity_text_src_city.text = trip.origin.name
+        add_trip_activity_text_dest_city.text = trip.destination.name
     }
 
     // back button

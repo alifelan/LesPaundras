@@ -1,11 +1,13 @@
 package com.example.taxiunico_lespaundras
 
+import ApiUtility.ApiClient
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_add_trip.*
 
 class FragmentAddTrip : Fragment() {
@@ -13,8 +15,18 @@ class FragmentAddTrip : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         add_trip_button_ok.setOnClickListener {
-            val addTripIntent = Intent(activity, AddTripActivity::class.java)
-            startActivity(addTripIntent)
+            if(!text_code.text.isEmpty()) {
+                ApiClient(activity?.applicationContext!!).getBusTrip(text_code.text.toString()) { trip, success, message ->
+                    if(success) {
+                        val addTripIntent = Intent(activity, AddTripActivity::class.java).apply {
+                            putExtra(NavbarActivity.TRIP, trip)
+                        }
+                        startActivity(addTripIntent)
+                    } else {
+                        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
