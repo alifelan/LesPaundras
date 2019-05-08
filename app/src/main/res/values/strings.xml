@@ -77,7 +77,10 @@
     <string name="date_key">date</string>
     <string name="logout">Log Out</string>
     <string name="button_cancel">Cancel</string>
-    <string name="address_success">Address set</string>
+    <string name="address_success">Change address</string>
+    <string name="address_set">Address set success</string>
     <string name="add_round_trip">Add roundtrip trip</string>
     <string name="back_trip">Set comeback trip</string>
+    <string name="add_origin">Add origin address</string>
+    <string name="add_destination">Add destination address</string>
 </resources>
