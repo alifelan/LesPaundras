@@ -77,4 +77,5 @@
     <string name="date_key">date</string>
     <string name="logout">Log Out</string>
     <string name="button_cancel">Cancel</string>
+    <string name="address_success">Address set</string>
 </resources>
