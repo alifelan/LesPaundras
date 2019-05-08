@@ -1,6 +1,9 @@
 package com.example.taxiunico_lespaundras
 
+import ApiUtility.Address
 import ApiUtility.ApiClient
+import android.app.Activity
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -17,6 +20,8 @@ class AddAddressActivity : AppCompatActivity() {
 
     lateinit var mapFragment : SupportMapFragment
     lateinit var googleMap: GoogleMap
+    lateinit var coordinates: LatLng
+    var found = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,12 +42,25 @@ class AddAddressActivity : AppCompatActivity() {
 
         add_address_button_map.setOnClickListener {
             ApiClient(this@AddAddressActivity).getCoordinates(add_address_editable.text.toString()) { coord, success, message ->
+                found = false
                 if(success && coord != null) {
                     googleMap.addMarker(MarkerOptions().position(coord!!).title(add_address_editable.text.toString()))
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coord, 19f))
+                    coordinates = coord
+                    found = true
                 } else {
                     Toast.makeText(this@AddAddressActivity, "Failed to retrieve location", Toast.LENGTH_SHORT).show()
                 }
+            }
+        }
+
+        add_address_button_ok.setOnClickListener {
+            if(found) {
+                val address: Address = Address(add_address_editable.text.toString(), coordinates)
+                val resultIntent: Intent = Intent().apply {
+                    putExtra(ADDRESS, address)
+                }
+                setResult(Activity.RESULT_OK, resultIntent)
             }
         }
     }
@@ -54,5 +72,9 @@ class AddAddressActivity : AppCompatActivity() {
             finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        const val ADDRESS = "Address"
     }
 }
