@@ -22,6 +22,7 @@ class AddAddressActivity : AppCompatActivity() {
     lateinit var googleMap: GoogleMap
     lateinit var coordinates: LatLng
     var found = false
+    var address: Address? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,25 +34,20 @@ class AddAddressActivity : AppCompatActivity() {
         // obtain intent data and display "source" or "destination" in title
         val data = intent.extras
         val srcDest: String = data.getString(AddTripActivity.SRCDEST)
+        address = data.getParcelable(AddTripActivity.ADDRESS)
+        if(address != null) {
+            add_address_editable.setText(address?.address)
+        }
         add_address_text_title.text = "Add " + srcDest + " address"
 
         mapFragment = supportFragmentManager.findFragmentById(R.id.add_address_map) as SupportMapFragment
         mapFragment.getMapAsync(OnMapReadyCallback {
             googleMap = it
+
         })
 
         add_address_button_map.setOnClickListener {
-            ApiClient(this@AddAddressActivity).getCoordinates(add_address_editable.text.toString()) { coord, success, message ->
-                found = false
-                if(success && coord != null) {
-                    googleMap.addMarker(MarkerOptions().position(coord!!).title(add_address_editable.text.toString()))
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coord, 19f))
-                    coordinates = coord
-                    found = true
-                } else {
-                    Toast.makeText(this@AddAddressActivity, "Failed to retrieve location", Toast.LENGTH_SHORT).show()
-                }
-            }
+            setMarker()
         }
 
         add_address_button_ok.setOnClickListener {
@@ -66,6 +62,20 @@ class AddAddressActivity : AppCompatActivity() {
         }
     }
 
+    fun setMarker() {
+        ApiClient(this@AddAddressActivity).getCoordinates(add_address_editable.text.toString()) { coord, success, message ->
+            found = false
+            if(success && coord != null) {
+                googleMap.addMarker(MarkerOptions().position(coord!!).title(add_address_editable.text.toString()))
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coord, 19f))
+                coordinates = coord
+                found = true
+            } else {
+                Toast.makeText(this@AddAddressActivity, "Failed to retrieve location", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     // back button
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
@@ -73,6 +83,18 @@ class AddAddressActivity : AppCompatActivity() {
             finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putParcelable(ADDRESS, address)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        address = savedInstanceState?.getParcelable(ADDRESS)
+        if(address != null)
+            add_address_editable.setText(address?.address)
     }
 
     companion object {
