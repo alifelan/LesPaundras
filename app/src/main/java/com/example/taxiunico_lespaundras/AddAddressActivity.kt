@@ -61,6 +61,7 @@ class AddAddressActivity : AppCompatActivity() {
                     putExtra(ADDRESS, address)
                 }
                 setResult(Activity.RESULT_OK, resultIntent)
+                finish()
             }
         }
     }
