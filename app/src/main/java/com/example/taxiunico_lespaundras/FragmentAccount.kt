@@ -26,19 +26,13 @@ class FragmentAccount : Fragment() {
         model = activity?.run {
             ViewModelProviders.of(this).get(UserViewModel::class.java)
         } ?: throw Exception("Invalid activity")
-        ApiClient(activity?.applicationContext!!).getUser(model.email) { user, success, message ->
-            if (success) {
-                text_name.setText(user?.name)
-                text_email.setText(user?.email)
-            } else {
-                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-            }
-        }
+        text_name.setText(model.user?.name)
+        text_email.setText(model.user?.email)
 
         account_button_ok.setOnClickListener {
             ApiClient(activity?.applicationContext!!).updateUser(
                 text_name.text.toString(),
-                model.email,
+                model.user?.email!!,
                 text_password.text.toString(),
                 text_payment.text.toString()
             ) { _, _, message ->

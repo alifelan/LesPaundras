@@ -2,7 +2,9 @@ package ApiUtility
 
 import android.content.Context
 import com.android.volley.Request
+import com.google.android.gms.maps.model.LatLng
 import org.json.JSONObject
+import java.time.Duration
 import kotlin.collections.HashMap
 
 
@@ -47,6 +49,7 @@ sealed class ApiRoute {
     data class GetBusTrip(var id: String, var ctx: Context) : ApiRoute()
     data class GetGeoCoding(var adddress: String, var ctx: Context) : ApiRoute()
     data class GetDirections(var origin: String, var destination: String, var ctx: Context) : ApiRoute()
+    data class CreateTaxiTrip(var email: String, var busTripId: String, var state: String, var city: String, var address: String, var latlng: LatLng,var trip: Int, var price: Double, var distance: ValueText, var duration: ValueText, var ctx: Context) : ApiRoute()
 
     val url: String
         get() {
@@ -62,6 +65,7 @@ sealed class ApiRoute {
                     ' ',
                     '+'
                 )}&destination=${this.destination.replace(' ', '+')}&units=metric&key=$API_KEY"
+                is CreateTaxiTrip -> "$baseUrl/createTaxiTrip/"
             }
         }
     val httpMethod: Int
@@ -75,6 +79,7 @@ sealed class ApiRoute {
                 is GetBusTrip -> Request.Method.GET
                 is GetGeoCoding -> Request.Method.GET
                 is GetDirections -> Request.Method.GET
+                is CreateTaxiTrip -> Request.Method.POST
             }
         }
 
@@ -110,6 +115,29 @@ sealed class ApiRoute {
                 is GetBusTrip -> null
                 is GetGeoCoding -> null
                 is GetDirections -> null
+                is CreateTaxiTrip -> {
+                    val json = JSONObject()
+                    json.put("email", this.email)
+                    json.put("busTripId", this.busTripId)
+                    json.put("trip", this.trip)
+                    json.put("price", this.price)
+                    json.put("distance", JSONObject().apply{
+                        put("value", this@ApiRoute.distance.value)
+                        put("text", this@ApiRoute.distance.text)
+                    })
+                    json.put("duration", JSONObject().apply {
+                        put("value", this@ApiRoute.duration.value)
+                        put("text", this@ApiRoute.duration.text)
+                    })
+                    json.put("location", JSONObject().apply{
+                        put("name", this@ApiRoute.address)
+                        put("state", this@ApiRoute.state)
+                        put("city", this@ApiRoute.city)
+                        put("address", this@ApiRoute.address)
+                        put("latitude", this@ApiRoute.latlng.latitude)
+                        put("longitude", this@ApiRoute.latlng.longitude)
+                    })
+                }
             }
         }
 

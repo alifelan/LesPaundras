@@ -16,22 +16,29 @@ class ApiClient(private val ctx: Context) {
      * PERFORM REQUEST
      */
     private fun performRequest(route: ApiRoute, completion: (success: Boolean, apiResponse: ApiResponse) -> Unit) {
-        val request: JsonObjectRequest = object : JsonObjectRequest(route.httpMethod, route.url, route.body, { response ->
-            this.handle(response, completion)
-        }, {
-            it.printStackTrace()
-            if (it.networkResponse != null && it.networkResponse.data != null)
-                this.handle(JSONObject().apply {
-                    put("message", JSONObject(String(it.networkResponse.data)).optString("message"))
-                    put("status", "false")}, completion)
-            else
-                this.handle(JSONObject().apply {
-                    put("message", getStringError(it))
-                    put("status", "false")}, completion)
-        }) {
-            override fun getHeaders(): MutableMap<String, String> = route.headers
-        }
-        request.retryPolicy = DefaultRetryPolicy(route.timeOut, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+        val request: JsonObjectRequest =
+            object : JsonObjectRequest(route.httpMethod, route.url, route.body, { response ->
+                this.handle(response, completion)
+            }, {
+                it.printStackTrace()
+                if (it.networkResponse != null && it.networkResponse.data != null)
+                    this.handle(JSONObject().apply {
+                        put("message", JSONObject(String(it.networkResponse.data)).optString("message"))
+                        put("status", "false")
+                    }, completion)
+                else
+                    this.handle(JSONObject().apply {
+                        put("message", getStringError(it))
+                        put("status", "false")
+                    }, completion)
+            }) {
+                override fun getHeaders(): MutableMap<String, String> = route.headers
+            }
+        request.retryPolicy = DefaultRetryPolicy(
+            route.timeOut,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
         getRequestQueue().add(request)
     }
 
@@ -57,6 +64,7 @@ class ApiClient(private val ctx: Context) {
             else -> "Internet error"
         }
     }
+
     /**
      * We create and return a new instance for the queue of Volley requests.
      **/
@@ -72,9 +80,9 @@ class ApiClient(private val ctx: Context) {
 
     fun getRandomBusTrip(completion: (randomTrip: String?, message: String) -> Unit) {
         val route = ApiRoute.RandomBusTrip(ctx)
-        this.performRequest(route) {success, response ->
+        this.performRequest(route) { success, response ->
             val id = response.json.getString("id")
-            if(success)
+            if (success)
                 completion.invoke(id, "")
             else
                 completion.invoke(null, response.message)
@@ -82,16 +90,22 @@ class ApiClient(private val ctx: Context) {
     }
 
     fun login(email: String, password: String, completion: (logged: Boolean, message: String) -> Unit) {
-        val route = ApiRoute.Login(email, password,ctx)
+        val route = ApiRoute.Login(email, password, ctx)
         this.performRequest(route) { success, response ->
             completion.invoke(success, response.message)
         }
     }
 
-    fun createUser(name: String, email: String, password: String, card: String, completion: (user: User?, status: Boolean, message: String) -> Unit) {
+    fun createUser(
+        name: String,
+        email: String,
+        password: String,
+        card: String,
+        completion: (user: User?, status: Boolean, message: String) -> Unit
+    ) {
         val route = ApiRoute.User(name, email, password, card, ctx)
         this.performRequest(route) { success, response ->
-            if(success) {
+            if (success) {
                 val user = Gson().fromJson(response.json.toString(), User::class.java)
                 completion.invoke(user, success, "User registration completed")
             } else {
@@ -100,10 +114,10 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
-    fun getUser(email : String, completion: (user: User?, status: Boolean, message: String) -> Unit) {
+    fun getUser(email: String, completion: (user: User?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.UserData(email, ctx)
         this.performRequest(route) { success, response ->
-            if(success) {
+            if (success) {
                 val user = Gson().fromJson(response.json.toString(), User::class.java)
                 completion.invoke(user, success, "User GET success")
             } else {
@@ -112,10 +126,16 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
-    fun updateUser(name: String, email: String, password: String, card: String, completion: (user: User?, status: Boolean, message: String) -> Unit) {
+    fun updateUser(
+        name: String,
+        email: String,
+        password: String,
+        card: String,
+        completion: (user: User?, status: Boolean, message: String) -> Unit
+    ) {
         val route = ApiRoute.UpdateUser(name, email, password, card, ctx)
         this.performRequest(route) { success, response ->
-            if(success) {
+            if (success) {
                 val user = Gson().fromJson(response.json.toString(), User::class.java)
                 completion.invoke(user, success, "User update completed")
             } else {
@@ -124,10 +144,10 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
-    fun getBusTrip(id: String, completion:(trip: BusTrip?, status: Boolean, message:String) -> Unit) {
+    fun getBusTrip(id: String, completion: (trip: BusTrip?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetBusTrip(id, ctx)
         this.performRequest(route) { success, response ->
-            if(success) {
+            if (success) {
                 val trip = Gson().fromJson(response.json.toString(), BusTrip::class.java)
                 completion.invoke(trip, success, "Trip retrieved successfully")
             } else {
@@ -136,18 +156,19 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
-    fun getCoordinates(address: String, completion:(coord: LatLng?, status: Boolean, message:String) -> Unit) {
+    fun getCoordinates(address: String, completion: (coord: LatLng?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetGeoCoding(address, ctx)
         this.performRequest(route) { success, response ->
-            if(success) {
-                val geometry = response.json.getJSONObject("geometry")
+            val results = response.json.getJSONArray("results")
+            if (success && response.json.getString("status") == "OK") {
+                val geometry = results.getJSONObject(0).getJSONObject("geometry")
                 val location = geometry.getJSONObject("location")
                 val lat = location.getDouble("lat")
                 val lng = location.getDouble("lng")
                 val coord = LatLng(lat, lng)
                 completion.invoke(coord, success, "Geocoding complete")
             } else {
-                completion.invoke(null, success, response.message)
+                completion.invoke(null, false, response.message)
             }
         }
     }
@@ -181,35 +202,52 @@ class ApiClient(private val ctx: Context) {
             val dlng = if (result and 1 != 0) (result shr 1).inv() else result shr 1
             lng += dlng
 
-            val p = LatLng(lat.toDouble() / 1E5,
-                lng.toDouble() / 1E5)
+            val p = LatLng(
+                lat.toDouble() / 1E5,
+                lng.toDouble() / 1E5
+            )
             poly.add(p)
         }
 
         return poly
     }
 
-    fun getDirections(origin: String, destination: String, completion:(route: Route?, status: Boolean, message: String) -> Unit) {
+    fun getDirections(
+        origin: String,
+        destination: String,
+        completion: (route: Route?, status: Boolean, message: String) -> Unit
+    ) {
         val route = ApiRoute.GetDirections(origin, destination, ctx)
         this.performRequest(route) { success, response ->
-            if(success) {
+            if (success) {
                 val routes = response.json.getJSONArray("routes")
-                if(routes.length() == 0) {
+                if (routes.length() == 0) {
                     completion.invoke(null, false, "No routes found")
                 } else {
                     val route = routes.getJSONObject(0)
                     val legs = route.getJSONArray("legs")
-                    val duration: ValueText = Gson().fromJson(route.getJSONObject("duration").toString(), ValueText::class.java)
-                    val distance: ValueText = Gson().fromJson(route.getJSONObject("distance").toString(), ValueText::class.java)
+                    var du = 0
+                    var di = 0
+                    var du_text = ""
+                    var di_text = ""
                     val points: MutableList<LatLng> = mutableListOf()
-                    for(i in 0 until legs.length()) {
-                        val steps = legs.getJSONArray(i)
-                        for(j in 0 until steps.length()) {
+                    for (i in 0 until legs.length()) {
+                        val leg = legs.getJSONObject(i)
+                        val steps = leg.getJSONArray("steps")
+                        val duration: ValueText =
+                            Gson().fromJson(leg.getJSONObject("duration").toString(), ValueText::class.java)
+                        du += duration.value
+                        du_text = duration.text
+                        val distance: ValueText =
+                            Gson().fromJson(leg.getJSONObject("distance").toString(), ValueText::class.java)
+                        di += distance.value
+                        di_text = distance.text
+                        for (j in 0 until steps.length()) {
                             val poly = decodePoly(steps.getJSONObject(j).getJSONObject("polyline").getString("points"))
                             points.addAll(poly)
                         }
                     }
-                    completion.invoke(Route(points, duration, distance), success, "Route found")
+                    completion.invoke(Route(points, ValueText(du, du_text), ValueText(di, di_text)), success, "Route found")
                 }
             } else {
                 completion.invoke(null, success, response.message)
@@ -217,5 +255,27 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
-
+    fun createTaxiTrip(
+        email: String,
+        busTripId: String,
+        state: String,
+        city: String,
+        address: String,
+        latlng : LatLng,
+        trip: Int,
+        price: Double,
+        distance: ValueText,
+        duration: ValueText,
+        completion: (trip: TaxiTrip?, status: Boolean, message: String) -> Unit
+    ) {
+        val route = ApiRoute.CreateTaxiTrip(email, busTripId, state, city, address, latlng, trip, price, distance, duration,ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                val trip: TaxiTrip = Gson().fromJson(response.json.toString(), TaxiTrip::class.java)
+                completion.invoke(trip, success, "Created taxi trip")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
 }

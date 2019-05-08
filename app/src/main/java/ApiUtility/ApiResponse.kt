@@ -12,7 +12,7 @@ class ApiResponse(public var json: JSONObject) {
             if(json.optString("status") != null) {
                 success = json.getString("status") != "false"
             }
-            if(json.optString("message") != null) {
+            if(json.has("message")) {
                 message = json.getString("message")
             }
         }
