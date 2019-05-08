@@ -40,6 +40,9 @@
     <string name="add_trip_code_hint">Trip code</string>
     <!-- Strings related to AddAddressActivity -->
     <string name="add_address_hint">Address</string>
+    <!-- Strings related to RatingActivity -->
+    <string name="rating_title">Rate driver</string>
+    <string name="rating_button_rate">Rate</string>
     <!-- Miscellaneous strings -->
     <string name="button_ok">OK</string>
     <string name="button_save_changes">Save changes</string>
