@@ -42,10 +42,12 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         setContentView(R.layout.activity_login)
 
         sharedPref = this.getSharedPreferences(getString(R.string.preferences_file), Context.MODE_PRIVATE)
-        val date = Date(System.currentTimeMillis())
-        val diff = date.time - sharedPref.getLong(getString(R.string.date_key), date.time)
-        if(diff < (60 * 60 * 6 * 1000)) {
-            loginCall(sharedPref.getString(getString(R.string.email_key), " "), sharedPref.getString(getString(R.string.password_key), " "))
+        if(sharedPref.contains(getString(R.string.date_key))) {
+            val date = Date(System.currentTimeMillis())
+            val diff = date.time - sharedPref.getLong(getString(R.string.date_key), date.time)
+            if(diff < (60 * 60 * 6 * 1000)) {
+                loginCall(sharedPref.getString(getString(R.string.email_key), " "), sharedPref.getString(getString(R.string.password_key), " "))
+            }
         }
        // Generate travel code and put it in textView and in clipboard
         button_code.setOnClickListener {
