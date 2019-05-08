@@ -8,8 +8,6 @@ import android.content.pm.PackageManager
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.app.LoaderManager.LoaderCallbacks
-import android.content.CursorLoader
-import android.content.Loader
 import android.database.Cursor
 import android.net.Uri
 import android.os.AsyncTask
@@ -22,13 +20,12 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.TextView
 
-import java.util.ArrayList
 import android.Manifest.permission.READ_CONTACTS
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.widget.Toast
 
 import kotlinx.android.synthetic.main.activity_login.*
+import java.util.*
 
 /**
  * A login screen that offers login via email/password.
@@ -38,11 +35,19 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
      * Keep track of the login task to ensure we can cancel it if requested.
      */
 
+    lateinit var sharedPref: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Generate travel code and put it in textView and in clipboard
+        sharedPref = this.getSharedPreferences(getString(R.string.preferences_file), Context.MODE_PRIVATE)
+        val date = Date(System.currentTimeMillis())
+        val diff = date.time - sharedPref.getLong(getString(R.string.date_key), date.time)
+        if(diff < (60 * 60 * 6 * 1000)) {
+            loginCall(sharedPref.getString(getString(R.string.email_key), " "), sharedPref.getString(getString(R.string.password_key), " "))
+        }
+       // Generate travel code and put it in textView and in clipboard
         button_code.setOnClickListener {
             ApiClient(this).getRandomBusTrip{ id, _ ->
                 text_code.text = id
@@ -148,12 +153,25 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             // form field with an error.
             focusView?.requestFocus()
         } else {
-            // Show a progress spinner
-            showProgress(true)
-            ApiClient(this).login(emailStr, passwordStr){ logged, message ->
-                showProgress(false)
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-                if (logged) {startNavbarActivity(emailStr)}
+            loginCall(emailStr, passwordStr)
+        }
+    }
+
+    private fun loginCall(emailStr: String, passwordStr: String) {
+        // Show a progress spinner
+        showProgress(true)
+        ApiClient(this).login(emailStr, passwordStr){ logged, message ->
+            showProgress(false)
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            if (logged) {
+                val date = Date(System.currentTimeMillis())
+                with(sharedPref.edit()) {
+                    putString(getString(R.string.email_key), emailStr)
+                    putString(getString(R.string.password_key), passwordStr)
+                    putLong(getString(R.string.date_key), date.time)
+                    apply()
+                }
+                startNavbarActivity(emailStr)
             }
         }
     }

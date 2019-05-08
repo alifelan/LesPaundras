@@ -4,7 +4,9 @@ import ApiUtility.ApiClient
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -17,12 +19,16 @@ import kotlinx.android.synthetic.main.activity_register.email_register_button
 import kotlinx.android.synthetic.main.activity_register.login_form
 import kotlinx.android.synthetic.main.activity_register.login_progress
 import kotlinx.android.synthetic.main.activity_register.password
+import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
+
+    lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+        sharedPref = this.getSharedPreferences(getString(R.string.preferences_file), Context.MODE_PRIVATE)
 
         email_register_button.setOnClickListener {
             showProgress(true)
@@ -36,6 +42,13 @@ class RegisterActivity : AppCompatActivity() {
                     showProgress(false)
                     Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
                     if (success) {
+                        val date = Date(System.currentTimeMillis())
+                        with(sharedPref.edit()) {
+                            putString(getString(R.string.email_key), email.text.toString())
+                            putString(getString(R.string.password_key), password.text.toString())
+                            putLong(getString(R.string.date_key), date.time)
+                            apply()
+                        }
                         startNavbarActivity(email.text.toString())
                     }
                 }
