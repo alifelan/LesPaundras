@@ -1,8 +1,10 @@
 package com.example.taxiunico_lespaundras
 
+import ApiUtility.ApiClient
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -31,19 +33,18 @@ class AddAddressActivity : AppCompatActivity() {
         mapFragment = supportFragmentManager.findFragmentById(R.id.add_address_map) as SupportMapFragment
         mapFragment.getMapAsync(OnMapReadyCallback {
             googleMap = it
-            //googleMap.isMyLocationEnabled = true
-            val location1 = LatLng(13.03,77.60)
-            googleMap.addMarker(MarkerOptions().position(location1).title("My Location"))
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location1,5f))
-
-            val location2 = LatLng(9.89,78.11)
-            googleMap.addMarker(MarkerOptions().position(location2).title("Madurai"))
-
-
-            val location3 = LatLng(13.00,77.00)
-            googleMap.addMarker(MarkerOptions().position(location3).title("Bangalore"))
-
         })
+
+        add_address_button_map.setOnClickListener {
+            ApiClient(this@AddAddressActivity).getCoordinates(add_address_editable.text.toString()) { coord, success, message ->
+                if(success && coord != null) {
+                    googleMap.addMarker(MarkerOptions().position(coord!!).title(add_address_editable.text.toString()))
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coord, 19f))
+                } else {
+                    Toast.makeText(this@AddAddressActivity, "Failed to retrieve location", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     // back button
