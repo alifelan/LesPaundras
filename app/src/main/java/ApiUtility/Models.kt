@@ -27,7 +27,8 @@ data class BusTrip(
     @SerializedName("origin") var origin: Place,
     @SerializedName("destination") var destination: Place,
     @SerializedName("departure_date") var departure_date: String = "",
-    @SerializedName("arrival_date") var arrival_date: String = ""
+    @SerializedName("arrival_date") var arrival_date: String = "",
+    @SerializedName("roundtrip") var roundtrip: Boolean
 ) : JSONConvertable, Parcelable
 
 @Parcelize
