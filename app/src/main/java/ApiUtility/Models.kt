@@ -19,7 +19,9 @@ data class Place(
     @SerializedName("name") var name: String = "",
     @SerializedName("state") var state: String = "",
     @SerializedName("city") var city: String = "",
-    @SerializedName("address") var address: String = ""
+    @SerializedName("address") var address: String = "",
+    @SerializedName("latitude") var latitue: Double = 0.0,
+    @SerializedName("longitude") var longitude: Double = 0.0
 ) : JSONConvertable, Parcelable
 
 @Parcelize
@@ -27,9 +29,11 @@ data class BusTrip(
     @SerializedName("id") var id: String = "",
     @SerializedName("origin") var origin: Place,
     @SerializedName("destination") var destination: Place,
-    @SerializedName("departure_date") var departure_date: String = "",
-    @SerializedName("arrival_date") var arrival_date: String = "",
-    @SerializedName("roundtrip") var roundtrip: Boolean
+    @SerializedName("first_departure_date") var first_departure_date: String = "",
+    @SerializedName("first_arrival_date") var first_arrival_date: String = "",
+    @SerializedName("second_departure_date") var second_departure_date: String = "",
+    @SerializedName("second_arrival_date") var second_arrival_date: String = "",
+    @SerializedName("round_trip") var roundtrip: Boolean
 ) : JSONConvertable, Parcelable
 
 @Parcelize
