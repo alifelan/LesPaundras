@@ -53,4 +53,5 @@
     <string name="email_key">email</string>
     <string name="password_key">password</string>
     <string name="date_key">date</string>
+    <string name="logout">Log Out</string>
 </resources>
