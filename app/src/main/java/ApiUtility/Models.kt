@@ -44,3 +44,9 @@ data class Route(
     var distance: ValueText
 ) : Parcelable
 
+@Parcelize
+data class Address(
+    var address: String,
+    var coordinates: LatLng
+) : Parcelable
+
