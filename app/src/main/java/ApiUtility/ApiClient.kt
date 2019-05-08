@@ -255,5 +255,27 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
-
+    fun createTaxiTrip(
+        email: String,
+        busTripId: String,
+        state: String,
+        city: String,
+        address: String,
+        latlng : LatLng,
+        trip: Int,
+        price: Double,
+        distance: ValueText,
+        duration: ValueText,
+        completion: (trip: TaxiTrip?, status: Boolean, message: String) -> Unit
+    ) {
+        val route = ApiRoute.CreateTaxiTrip(email, busTripId, state, city, address, latlng, trip, price, distance, duration,ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                val trip: TaxiTrip = Gson().fromJson(response.json.toString(), TaxiTrip::class.java)
+                completion.invoke(trip, success, "Created taxi trip")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
 }

@@ -50,3 +50,27 @@ data class Address(
     var coordinates: LatLng
 ) : Parcelable
 
+@Parcelize
+data class Taxi(
+    @SerializedName("id") var id: String = "",
+    @SerializedName("driver_name") var driverName: String = "",
+    @SerializedName("plate") var plate: String = "",
+    @SerializedName("model") var model: String = "",
+    @SerializedName("brand") var brand: String = "",
+    @SerializedName("taxi_number") var taxi_number: String = ""
+) : JSONConvertable, Parcelable
+
+@Parcelize
+data class TaxiTrip(
+    @SerializedName("id") var id: String = "",
+    @SerializedName("origin") var origin: Place,
+    @SerializedName("destination") var destination: Place,
+    @SerializedName("date") var date: String = "",
+    @SerializedName("bus_trip") var busTrip: BusTrip,
+    @SerializedName("user") var user: User,
+    @SerializedName("taxi") var taxi: Taxi,
+    @SerializedName("price") var price: Double,
+    @SerializedName("taxi_rating") var taxiRating: Double,
+    @SerializedName("user_rating") var userRating: Double
+) : JSONConvertable, Parcelable
+
