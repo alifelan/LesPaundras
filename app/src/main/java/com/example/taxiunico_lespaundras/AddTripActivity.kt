@@ -31,10 +31,13 @@ class AddTripActivity : AppCompatActivity() {
         first = intent.extras.getBoolean(NavbarActivity.FIRST)
         user = intent.extras.getParcelable(NavbarActivity.USER)
 
-        if(!first) {
+        if (!first) {
             val aux = trip.origin
             trip.origin = trip.destination
             trip.destination = aux
+        } else {
+            add_trip_activity_button_ok.text = getString(R.string.back_trip)
+            add_trip_activity_text_title.text = getString(R.string.add_round_trip)
         }
 
         add_trip_activity_text_src_city.text = trip.origin.name
@@ -46,37 +49,67 @@ class AddTripActivity : AppCompatActivity() {
         add_trip_activity_button_add_src_address.setOnClickListener {
             val addSrcIntent = Intent(this, AddAddressActivity::class.java)
             addSrcIntent.putExtra(SRCDEST, "source")
+            addSrcIntent.putExtra(ADDRESS, source)
             startActivityForResult(addSrcIntent, TRIP_START)
         }
 
         add_trip_activity_button_add_dest_address.setOnClickListener {
             val addDestIntent = Intent(this, AddAddressActivity::class.java)
             addDestIntent.putExtra(SRCDEST, "destination")
+            addDestIntent.putExtra(ADDRESS, destination)
             startActivityForResult(addDestIntent, TRIP_END)
         }
 
         add_trip_activity_button_ok.setOnClickListener {
-            if(source != null) {
-                ApiClient(this).getDirections(source?.address!!, "${trip.origin.address},${trip.origin.city},${trip.origin.state}") { route, success, message ->
-                    if(success) {
-                        val tripT = if(first) 1 else 3
-                        ApiClient(this@AddTripActivity).createTaxiTrip(user.email, trip.id, trip.origin.state, trip.origin.city, source?.address!!, source?.coordinates!!, tripT, route?.distance?.value!!*fare, route.distance, route.duration) { _, _, _ ->
+            if (source != null) {
+                ApiClient(this).getDirections(
+                    source?.address!!,
+                    "${trip.origin.address},${trip.origin.city},${trip.origin.state}"
+                ) { route, success, message ->
+                    if (success) {
+                        val tripT = if (first) 1 else 3
+                        ApiClient(this@AddTripActivity).createTaxiTrip(
+                            user.email,
+                            trip.id,
+                            trip.origin.state,
+                            trip.origin.city,
+                            source?.address!!,
+                            source?.coordinates!!,
+                            tripT,
+                            route?.distance?.value!! * fare,
+                            route.distance,
+                            route.duration
+                        ) { _, _, _ ->
 
                         }
                     }
                 }
             }
-            if(destination != null) {
-                ApiClient(this).getDirections(destination?.address!!, "${trip.destination.address},${trip.destination.city},${trip.destination.state}") { route, success, message ->
-                    if(success) {
-                        val tripT = if(first) 2 else 4
-                        ApiClient(this@AddTripActivity).createTaxiTrip(user.email, trip.id, trip.destination.state, trip.destination.city, destination?.address!!, destination?.coordinates!!, tripT, route?.distance?.value!!*fare, route.distance, route.duration) { _, _, _ ->
+            if (destination != null) {
+                ApiClient(this).getDirections(
+                    destination?.address!!,
+                    "${trip.destination.address},${trip.destination.city},${trip.destination.state}"
+                ) { route, success, message ->
+                    if (success) {
+                        val tripT = if (first) 2 else 4
+                        ApiClient(this@AddTripActivity).createTaxiTrip(
+                            user.email,
+                            trip.id,
+                            trip.destination.state,
+                            trip.destination.city,
+                            destination?.address!!,
+                            destination?.coordinates!!,
+                            tripT,
+                            route?.distance?.value!! * fare,
+                            route.distance,
+                            route.duration
+                        ) { _, _, _ ->
 
                         }
                     }
                 }
             }
-            if(trip.roundtrip && first) {
+            if (trip.roundtrip && first) {
                 val addTripIntent = Intent(this@AddTripActivity, AddTripActivity::class.java).apply {
                     putExtra(NavbarActivity.TRIP, trip)
                     putExtra(NavbarActivity.FIRST, false)
@@ -93,11 +126,11 @@ class AddTripActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(resultCode == Activity.RESULT_OK) {
-            if(requestCode == TRIP_START) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == TRIP_START) {
                 source = data?.extras?.getParcelable(AddAddressActivity.ADDRESS)
                 add_trip_activity_button_add_src_address.text = getString(R.string.address_success)
-            } else if(requestCode == TRIP_END) {
+            } else if (requestCode == TRIP_END) {
                 destination = data?.extras?.getParcelable(AddAddressActivity.ADDRESS)
                 add_trip_activity_button_add_dest_address.text = getString(R.string.address_success)
             }
@@ -106,9 +139,12 @@ class AddTripActivity : AppCompatActivity() {
 
     companion object {
         const val SRCDEST: String = "srcDest"
-        const val CURRENT_TRIP: String ="current"
+        const val CURRENT_TRIP: String = "current"
         const val FIRST: String = "first"
         const val USER: String = "user"
+        const val SOURCE: String = "source"
+        const val DESTINATION: String = "destination"
+        const val ADDRESS: String = "address"
         const val TRIP_START: Int = 1
         const val TRIP_END: Int = 2
     }
@@ -116,13 +152,25 @@ class AddTripActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putParcelable(CURRENT_TRIP, trip)
+        outState?.putParcelable(USER, user)
+        outState?.putBoolean(FIRST, first)
+        outState?.putParcelable(SOURCE, source)
+        outState?.putParcelable(DESTINATION, destination)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         trip = savedInstanceState?.getParcelable(CURRENT_TRIP)!!
+        user = savedInstanceState.getParcelable(USER)!!
+        first = savedInstanceState.getBoolean(FIRST)
+        source = savedInstanceState.getParcelable(SOURCE)
+        destination = savedInstanceState.getParcelable(DESTINATION)
         add_trip_activity_text_src_city.text = trip.origin.name
         add_trip_activity_text_dest_city.text = trip.destination.name
+        if (first) {
+            add_trip_activity_button_ok.text = getString(R.string.back_trip)
+            add_trip_activity_text_title.text = getString(R.string.add_round_trip)
+        }
     }
 
     // back button
