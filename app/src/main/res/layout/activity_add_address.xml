@@ -19,8 +19,8 @@
             app:layout_constraintRight_toRightOf="parent"/>
 
     <android.support.design.widget.TextInputLayout
-            android:id="@+id/add_address_input_address"
             android:layout_width="0dp"
+            android:id="@+id/add_address_input_address"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/add_address_text_title"
             app:layout_constraintBottom_toTopOf="@id/add_address_map"
@@ -28,6 +28,7 @@
             app:layout_constraintRight_toLeftOf="@id/add_address_button_map">
 
         <AutoCompleteTextView
+                android:id="@+id/add_address_editable"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/add_address_hint"
