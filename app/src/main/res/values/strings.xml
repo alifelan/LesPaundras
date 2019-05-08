@@ -78,4 +78,6 @@
     <string name="logout">Log Out</string>
     <string name="button_cancel">Cancel</string>
     <string name="address_success">Address set</string>
+    <string name="add_round_trip">Add roundtrip trip</string>
+    <string name="back_trip">Set comeback trip</string>
 </resources>
