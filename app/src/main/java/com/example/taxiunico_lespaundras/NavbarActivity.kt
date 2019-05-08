@@ -1,5 +1,6 @@
 package com.example.taxiunico_lespaundras
 
+import ApiUtility.ApiClient
 import ViewModels.UserViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -7,10 +8,12 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 
 class NavbarActivity : AppCompatActivity() {
 
     val fragmentManager = supportFragmentManager
+    var email = ""
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -48,7 +51,14 @@ class NavbarActivity : AppCompatActivity() {
 
         if(intent.hasExtra(LoginActivity.EMAIL)) {
             val model = ViewModelProviders.of(this).get(UserViewModel::class.java)
-            model.email = intent.extras!!.getString(LoginActivity.EMAIL)!!
+            email = intent.extras!!.getString(LoginActivity.EMAIL)!!
+            ApiClient(this).getUser(email){ user, success, message ->
+                if(success) {
+                    model.user = user
+                } else {
+                    Toast.makeText(this@NavbarActivity, message, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
@@ -60,5 +70,7 @@ class NavbarActivity : AppCompatActivity() {
 
     companion object {
         val TRIP : String = "TRIP"
+        val FIRST: String = "FIRST"
+        val USER: String = "USER"
     }
 }
