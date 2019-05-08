@@ -20,7 +20,7 @@ class AddAddressActivity : AppCompatActivity() {
 
     lateinit var mapFragment : SupportMapFragment
     lateinit var googleMap: GoogleMap
-    lateinit var coordinates: LatLng
+    var coordinates: LatLng? = null
     var found = false
     var address: Address? = null
 
@@ -52,11 +52,16 @@ class AddAddressActivity : AppCompatActivity() {
         }
 
         add_address_button_ok.setOnClickListener {
+            if(add_address_editable.text.isEmpty() || coordinates == null) {
+                Toast.makeText(this, "Please set an address", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             if(found) {
-                val address: Address = Address(add_address_editable.text.toString(), coordinates)
+                val address: Address = Address(add_address_editable.text.toString(), coordinates!!)
                 val resultIntent: Intent = Intent().apply {
                     putExtra(ADDRESS, address)
                 }
+                Toast.makeText(this, R.string.address_set, Toast.LENGTH_SHORT).show()
                 setResult(Activity.RESULT_OK, resultIntent)
                 finish()
             }
@@ -64,16 +69,20 @@ class AddAddressActivity : AppCompatActivity() {
     }
 
     fun setMarker() {
-        ApiClient(this@AddAddressActivity).getCoordinates(add_address_editable.text.toString()) { coord, success, message ->
-            found = false
-            if(success && coord != null) {
-                googleMap.addMarker(MarkerOptions().position(coord!!).title(add_address_editable.text.toString()))
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coord, 19f))
-                coordinates = coord
-                found = true
-            } else {
-                Toast.makeText(this@AddAddressActivity, "Failed to retrieve location", Toast.LENGTH_SHORT).show()
+        if(add_address_editable.text.isNotEmpty()) {
+            ApiClient(this@AddAddressActivity).getCoordinates(add_address_editable.text.toString()) { coord, success, message ->
+                found = false
+                if(success && coord != null) {
+                    googleMap.addMarker(MarkerOptions().position(coord!!).title(add_address_editable.text.toString()))
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coord, 19f))
+                    coordinates = coord
+                    found = true
+                } else {
+                    Toast.makeText(this@AddAddressActivity, "Failed to retrieve location", Toast.LENGTH_SHORT).show()
+                }
             }
+        } else {
+            Toast.makeText(this, "Please fill an address", Toast.LENGTH_SHORT).show()
         }
     }
 
