@@ -37,6 +37,7 @@ class AddAddressActivity : AppCompatActivity() {
         address = data.getParcelable(AddTripActivity.ADDRESS)
         if(address != null) {
             add_address_editable.setText(address?.address)
+            setMarker()
         }
         add_address_text_title.text = "Add " + srcDest + " address"
 
