@@ -5,12 +5,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class User(
     @SerializedName("name") var name: String = "",
     @SerializedName("email") var email: String = "",
     @SerializedName("rating") var rating : Int = 0,
     @SerializedName("trips") var trips : Int = 0
-) : JSONConvertable
+) : JSONConvertable, Parcelable
 
 @Parcelize
 data class Place(
