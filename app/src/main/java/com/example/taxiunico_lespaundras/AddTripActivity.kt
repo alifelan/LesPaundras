@@ -96,8 +96,10 @@ class AddTripActivity : AppCompatActivity() {
         if(resultCode == Activity.RESULT_OK) {
             if(requestCode == TRIP_START) {
                 source = data?.extras?.getParcelable(AddAddressActivity.ADDRESS)
+                add_trip_activity_button_add_src_address.text = getString(R.string.address_success)
             } else if(requestCode == TRIP_END) {
                 destination = data?.extras?.getParcelable(AddAddressActivity.ADDRESS)
+                add_trip_activity_button_add_dest_address.text = getString(R.string.address_success)
             }
         }
     }

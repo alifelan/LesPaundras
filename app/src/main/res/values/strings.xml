@@ -43,4 +43,5 @@
     <!-- Miscellaneous strings -->
     <string name="button_ok">OK</string>
     <string name="button_save_changes">Save changes</string>
+    <string name="address_success">Address set</string>
 </resources>
