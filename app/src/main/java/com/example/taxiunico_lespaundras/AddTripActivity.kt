@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.MenuItem
+import android.view.View
 import kotlinx.android.synthetic.main.activity_add_trip.*
 import kotlinx.android.synthetic.main.fragment_add_trip.*
 
@@ -53,11 +54,35 @@ class AddTripActivity : AppCompatActivity() {
             startActivityForResult(addSrcIntent, TRIP_START)
         }
 
+        add_trip_activity_button_cancel_src_address.setOnClickListener {
+            source = null
+            add_trip_activity_button_add_src_address.setText(R.string.add_origin)
+            it.visibility = View.GONE
+        }
+
+        add_trip_activity_button_cancel_dest_address.setOnClickListener {
+            destination = null
+            add_trip_activity_button_add_dest_address.setText(R.string.add_destination)
+            it.visibility = View.GONE
+        }
+
         add_trip_activity_button_add_dest_address.setOnClickListener {
             val addDestIntent = Intent(this, AddAddressActivity::class.java)
             addDestIntent.putExtra(SRCDEST, "destination")
             addDestIntent.putExtra(ADDRESS, destination)
             startActivityForResult(addDestIntent, TRIP_END)
+        }
+
+        if(source == null) {
+            add_trip_activity_button_cancel_src_address.visibility = View.GONE
+        } else {
+            add_trip_activity_button_cancel_src_address.visibility = View.VISIBLE
+        }
+
+        if(destination == null) {
+            add_trip_activity_button_cancel_dest_address.visibility = View.GONE
+        } else {
+            add_trip_activity_button_cancel_dest_address.visibility = View.VISIBLE
         }
 
         add_trip_activity_button_ok.setOnClickListener {
@@ -129,9 +154,19 @@ class AddTripActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == TRIP_START) {
                 source = data?.extras?.getParcelable(AddAddressActivity.ADDRESS)
+                if(source == null) {
+                    add_trip_activity_button_cancel_src_address.visibility = View.GONE
+                } else {
+                    add_trip_activity_button_cancel_src_address.visibility = View.VISIBLE
+                }
                 add_trip_activity_button_add_src_address.text = getString(R.string.address_success)
             } else if (requestCode == TRIP_END) {
                 destination = data?.extras?.getParcelable(AddAddressActivity.ADDRESS)
+                if(destination == null) {
+                    add_trip_activity_button_cancel_dest_address.visibility = View.GONE
+                } else {
+                    add_trip_activity_button_cancel_dest_address.visibility = View.VISIBLE
+                }
                 add_trip_activity_button_add_dest_address.text = getString(R.string.address_success)
             }
         }
@@ -170,6 +205,17 @@ class AddTripActivity : AppCompatActivity() {
         if (first) {
             add_trip_activity_button_ok.text = getString(R.string.back_trip)
             add_trip_activity_text_title.text = getString(R.string.add_round_trip)
+        }
+        if(source == null) {
+            add_trip_activity_button_cancel_src_address.visibility = View.GONE
+        } else {
+            add_trip_activity_button_cancel_src_address.visibility = View.VISIBLE
+        }
+
+        if(destination == null) {
+            add_trip_activity_button_cancel_dest_address.visibility = View.GONE
+        } else {
+            add_trip_activity_button_cancel_dest_address.visibility = View.VISIBLE
         }
     }
 
