@@ -16,6 +16,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_add_address.*
 
+/**
+ * Activity used to register an address in a taxi trip creation
+ */
 class AddAddressActivity : AppCompatActivity() {
 
     lateinit var mapFragment : SupportMapFragment

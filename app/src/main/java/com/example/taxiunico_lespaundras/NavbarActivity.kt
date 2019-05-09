@@ -15,6 +15,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 
+/**
+ * Activity showing core activities for the user application
+ */
 class NavbarActivity : AppCompatActivity() {
 
     val fragmentManager = supportFragmentManager

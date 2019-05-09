@@ -7,7 +7,9 @@ import org.json.JSONObject
 import java.time.Duration
 import kotlin.collections.HashMap
 
-
+/**
+ * Class in charge of holding routes for api calls
+ */
 sealed class ApiRoute {
 
     val timeOut: Int
@@ -51,6 +53,9 @@ sealed class ApiRoute {
     data class GetDirections(var origin: String, var destination: String, var ctx: Context) : ApiRoute()
     data class CreateTaxiTrip(var email: String, var busTripId: String, var state: String, var city: String, var address: String, var latlng: LatLng,var trip: Int, var price: Double, var distance: ValueText, var duration: ValueText, var ctx: Context) : ApiRoute()
 
+    /**
+     * Url to be used for the api call
+     */
     val url: String
         get() {
             return when (this) {
@@ -68,6 +73,10 @@ sealed class ApiRoute {
                 is CreateTaxiTrip -> "$baseUrl/createTaxiTrip/"
             }
         }
+
+    /**
+     * Method for the api call
+     */
     val httpMethod: Int
         get() {
             return when (this) {
@@ -83,6 +92,9 @@ sealed class ApiRoute {
             }
         }
 
+    /**
+     * Body to be sent in the api call
+     */
     val body: JSONObject?
         get() {
             return when (this) {
@@ -141,6 +153,9 @@ sealed class ApiRoute {
             }
         }
 
+    /**
+     * Headers for every call
+     */
     val headers: HashMap<String, String>
         get() {
             val map: HashMap<String, String> = hashMapOf()

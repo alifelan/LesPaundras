@@ -13,6 +13,9 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_add_trip.*
 import java.lang.Exception
 
+/**
+ * Fragment used to connect navbaractivity with AddTripActivity
+ */
 class FragmentAddTrip : Fragment() {
     private lateinit var model: UserViewModel
 
