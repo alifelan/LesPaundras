@@ -8,6 +8,7 @@ import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
+import org.json.JSONArray
 import org.json.JSONObject
 
 /**
@@ -343,6 +344,23 @@ class ApiClient(private val ctx: Context) {
             if(success) {
                 val trip: TaxiTrip = Gson().fromJson(response.json.toString(), TaxiTrip::class.java)
                 completion.invoke(trip, success, "Trip cancelled")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
+
+    fun getUserBusTrips(busTripId: Int, email: String, completion: (trips: MutableList<TaxiTrip>?, status: Boolean, message: String) -> Unit {
+        val route = ApiRoute.GetUserBusTrips(busTripId, email, ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                var trips: MutableList<TaxiTrip>? = mutableListOf()
+                var trips_json: JSONArray = response.json.getJSONArray("trips")
+                for (i in 0 until trips_json.length()) {
+                    val trip: TaxiTrip = Gson().fromJson(trips_json.getJSONObject(i).toString(), TaxiTrip::class.java)
+                    trips?.add(trip)
+                }
+                completion.invoke(trips, success, "User rides fetched")
             } else {
                 completion.invoke(null, success, response.message)
             }
