@@ -74,7 +74,7 @@ class FragmentHome : Fragment() {
         ApiClient(activity?.applicationContext!!).getCurrentOrNextTrip(model.user?.email!!) {trip, rate, current, success, message ->
             if(rate != null) {
                 val rateIntent = Intent(activity, RatingActivity::class.java).apply {
-                    putExtra(TRIP, trip)
+                    putExtra(TRIP, rate)
                     putExtra(LoginActivity.EMAIL, trip?.user?.email)
                 }
                 startActivity(rateIntent)
