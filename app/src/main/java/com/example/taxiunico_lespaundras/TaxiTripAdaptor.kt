@@ -9,7 +9,7 @@ import android.widget.BaseAdapter
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.row.*
 
-class TaxiTripAdaptor(private val context: Context, private val trips: MutableList<TaxiTripAdaptor>) : BaseAdapter() {
+class TaxiTripAdaptor(private val context: Context, private val trips: MutableList<TaxiTrip>) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?):View {
         val taxiTripHolder: TaxiTripViewHolder
