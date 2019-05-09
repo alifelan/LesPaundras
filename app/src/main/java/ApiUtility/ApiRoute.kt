@@ -52,6 +52,7 @@ sealed class ApiRoute {
     data class GetGeoCoding(var adddress: String, var ctx: Context) : ApiRoute()
     data class GetDirections(var origin: String, var destination: String, var ctx: Context) : ApiRoute()
     data class CreateTaxiTrip(var email: String, var busTripId: String, var state: String, var city: String, var address: String, var latlng: LatLng,var trip: Int, var price: Double, var distance: ValueText, var duration: ValueText, var ctx: Context) : ApiRoute()
+    data class GetCurrentOrNext(var email: String, var ctx: Context) : ApiRoute()
 
     /**
      * Url to be used for the api call
@@ -71,6 +72,7 @@ sealed class ApiRoute {
                     '+'
                 )}&destination=${this.destination.replace(' ', '+')}&units=metric&key=$API_KEY"
                 is CreateTaxiTrip -> "$baseUrl/createTaxiTrip/"
+                is GetCurrentOrNext -> "$baseUrl/getCurrentOrNext/${this.email}"
             }
         }
 
@@ -89,6 +91,7 @@ sealed class ApiRoute {
                 is GetGeoCoding -> Request.Method.GET
                 is GetDirections -> Request.Method.GET
                 is CreateTaxiTrip -> Request.Method.POST
+                is GetCurrentOrNext -> Request.Method.GET
             }
         }
 
@@ -150,6 +153,7 @@ sealed class ApiRoute {
                         put("longitude", this@ApiRoute.latlng.longitude)
                     })
                 }
+                is GetCurrentOrNext -> null
             }
         }
 

@@ -47,7 +47,7 @@ class AddAddressActivity : AppCompatActivity() {
         mapFragment = supportFragmentManager.findFragmentById(R.id.add_address_map) as SupportMapFragment
         mapFragment.getMapAsync(OnMapReadyCallback {
             googleMap = it
-
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(19.4362, -99.1373), 10f))
         })
 
         add_address_button_map.setOnClickListener {
