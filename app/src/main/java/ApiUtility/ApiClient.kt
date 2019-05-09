@@ -313,15 +313,19 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
-    fun getCurrentOrNextTrip(email: String, completion: (trip: TaxiTrip?, current: Boolean, status: Boolean, message: String) -> Unit) {
+    fun getCurrentOrNextTrip(email: String, completion: (trip: TaxiTrip?, rate: TaxiTrip? ,current: Boolean, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetCurrentOrNext(email, ctx)
         this.performRequest(route) {success, response ->
             if(success && response.json.optJSONObject("taxi_trip") != null) {
                 val current = response.json.getBoolean("current")
                 val trip: TaxiTrip = Gson().fromJson(response.json.getJSONObject("taxi_trip").toString(), TaxiTrip::class.java)
-                completion.invoke(trip, current, success, response.message)
+                var rate: TaxiTrip? = null
+                if(response.json.getJSONArray("rate").length() > 0) {
+                    rate = Gson().fromJson(response.json.getJSONArray("rate").getJSONObject(0).toString(), TaxiTrip::class.java)
+                }
+                completion.invoke(trip, rate, current, success, response.message)
             } else {
-                completion.invoke(null, false, success, "Unable to get trip")
+                completion.invoke(null, null,false, success, "Unable to get trip")
             }
         }
     }
