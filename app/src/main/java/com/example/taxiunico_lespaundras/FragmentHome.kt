@@ -59,8 +59,10 @@ class FragmentHome : Fragment() {
     private fun setInfoVisibility(visibility: Int) {
         home_text_src.visibility = visibility
         home_text_dest.visibility = visibility
+        home_text_yourDriver.visibility = visibility
         home_text_driver_info_name.visibility = visibility
         home_text_driver_info_brand.visibility = visibility
+        home_text_driver_info_model.visibility = visibility
         home_text_driver_info_plates.visibility = visibility
         home_text_driver_info_taxiNum.visibility = visibility
         home_image_driver.visibility = visibility
@@ -69,6 +71,7 @@ class FragmentHome : Fragment() {
     private fun setRoute() {
         ApiClient(activity?.applicationContext!!).getCurrentOrNextTrip(model.user?.email!!) {trip, current, success, message ->
             if(success && trip != null) {
+                setInfoVisibility(View.VISIBLE)
                 setInfo(trip, current)
                 val origin = "${trip?.origin?.address},${trip?.origin?.city},${trip?.origin?.state}"
                 val destination = "${trip?.destination?.address},${trip?.destination?.city},${trip?.destination?.state}"
@@ -85,11 +88,12 @@ class FragmentHome : Fragment() {
                         googleMap.addMarker(MarkerOptions().position(dLatLng).title(trip.destination.name))
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(oLatLng, 12f))
                     } else {
-                        home_text_title.text = "No trip"
                         Toast.makeText(activity?.applicationContext!!, message, Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {
+                home_text_title.text = "No trip"
+                setInfoVisibility(View.INVISIBLE)
                 Toast.makeText(activity?.applicationContext, message, Toast.LENGTH_SHORT).show()
             }
         }
