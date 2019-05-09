@@ -73,7 +73,6 @@ sealed class ApiRoute {
                 )}&destination=${this.destination.replace(' ', '+')}&units=metric&key=$API_KEY"
                 is CreateTaxiTrip -> "$baseUrl/createTaxiTrip/"
                 is GetCurrentOrNext -> "$baseUrl/getCurrentOrNext/${this.email}"
-                is GetUserTaxiTrips -> "$baseUrl/userTaxiTrips/${this.email}/"
                 is GetUserTaxiTrips -> "$baseUrl/userTaxiTrips/${this.email}"
             }
         }
