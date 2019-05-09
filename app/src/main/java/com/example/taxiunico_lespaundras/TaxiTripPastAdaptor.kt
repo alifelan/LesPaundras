@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.rowPastTrip.*
+import kotlinx.android.synthetic.main.row_past_trip.*
 
-class TaxiTripPastAdaptor(private val context: Context, private val trips: MutableList<TaxiTripAdaptor>) : BaseAdapter() {
+class TaxiTripPastAdaptor(private val context: Context, private val trips: MutableList<TaxiTrip>) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?):View {
         val taxiTripHolder: TaxiTripViewHolder
@@ -18,7 +18,7 @@ class TaxiTripPastAdaptor(private val context: Context, private val trips: Mutab
 
         if(convertView == null) {
             val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            rowView = inflater.inflate(R.layout.rowPastTrip, parent, false)
+            rowView = inflater.inflate(R.layout.row_past_trip, parent, false)
             taxiTripHolder = TaxiTripViewHolder(rowView)
             rowView.tag = taxiTripHolder
         } else {
