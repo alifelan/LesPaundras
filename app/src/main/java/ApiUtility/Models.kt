@@ -12,7 +12,7 @@ import kotlinx.android.parcel.Parcelize
 data class User(
     @SerializedName("name") var name: String = "",
     @SerializedName("email") var email: String = "",
-    @SerializedName("rating") var rating : Int = 0,
+    @SerializedName("rating") var rating : Double = 0.0,
     @SerializedName("trips") var trips : Int = 0
 ) : JSONConvertable, Parcelable
 
