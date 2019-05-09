@@ -61,7 +61,7 @@ sealed class ApiRoute {
         get() {
             return when (this) {
                 is RandomBusTrip -> "$baseUrl/randomBusTrip"
-                is Login -> "$baseUrl/login/"
+                is Login -> "$baseUrl/userLogin/"
                 is User -> "$baseUrl/user/"
                 is UpdateUser -> "$baseUrl/user/"
                 is UserData -> "$baseUrl/user/${this.email}"
@@ -74,6 +74,7 @@ sealed class ApiRoute {
                 is CreateTaxiTrip -> "$baseUrl/createTaxiTrip/"
                 is GetCurrentOrNext -> "$baseUrl/getCurrentOrNext/${this.email}"
                 is GetUserTaxiTrips -> "$baseUrl/userTaxiTrips/${this.email}/"
+                is GetUserTaxiTrips -> "$baseUrl/userTaxiTrips/${this.email}"
             }
         }
 
