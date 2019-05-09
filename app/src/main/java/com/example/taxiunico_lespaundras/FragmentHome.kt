@@ -74,6 +74,7 @@ class FragmentHome : Fragment() {
                         googleMap.addMarker(MarkerOptions().position(dLatLng).title(trip.destination.name))
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(oLatLng, 12f))
                     } else {
+                        home_text_title.text = "No trip"
                         Toast.makeText(activity?.applicationContext!!, message, Toast.LENGTH_SHORT).show()
                     }
                 }
