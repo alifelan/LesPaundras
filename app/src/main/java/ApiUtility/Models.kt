@@ -106,8 +106,9 @@ data class TaxiTrip(
 
 @Parcelize
 data class UserTaxiTrips(
-    @SerializedName("past_trips") var pastTrips: List<TaxiTrip>,
-    @SerializedName("future_trips") var futureTrips: List<TaxiTrip>,
-    @SerializedName("current_trip") var currentTrips: List<TaxiTrip>
+    @SerializedName("past_trips") var pastTrips: MutableList<TaxiTrip>,
+    @SerializedName("future_trips") var futureTrips: MutableList<TaxiTrip>,
+    @SerializedName("current_trip") var currentTrips: MutableList<TaxiTrip>,
+    @SerializedName("cancelled_trips") var cancelledTrips: MutableList<TaxiTrip>
 ) : JSONConvertable, Parcelable
 
