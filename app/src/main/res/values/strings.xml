@@ -56,7 +56,6 @@
     <!-- Miscellaneous strings -->
     <string name="button_ok">OK</string>
     <string name="button_save_changes">Save changes</string>
-    <string name="address_success">Change address</string>
     <string name="address_set">Address set success</string>
     <string name="add_round_trip">Add roundtrip trip</string>
     <string name="back_trip">Set comeback trip</string>
