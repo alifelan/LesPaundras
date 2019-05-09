@@ -35,7 +35,7 @@ class FragmentHome : Fragment() {
         mapFragment.getMapAsync{
             googleMap = it
             ApiClient(activity?.applicationContext!!).getCurrentOrNextTrip(model.user?.email!!) {trip, current, success, message ->
-                if(success) {
+                if(success && trip != null) {
                     val origin = "${trip?.origin?.address},${trip?.origin?.city},${trip?.origin?.state}"
                     val destination = "${trip?.destination?.address},${trip?.destination?.city},${trip?.destination?.state}"
                     ApiClient(activity?.applicationContext!!).getDirections(origin, destination){route, success, message ->
