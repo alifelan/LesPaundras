@@ -94,7 +94,7 @@ data class TaxiTrip(
     @SerializedName("id") var id: String = "",
     @SerializedName("origin") var origin: Place,
     @SerializedName("destination") var destination: Place,
-    @SerializedName("date") var date: String = "",
+    @SerializedName("date") var date: String? = "",
     @SerializedName("bus_trip") var busTrip: BusTrip,
     @SerializedName("user") var user: User,
     @SerializedName("taxi") var taxi: Taxi,
