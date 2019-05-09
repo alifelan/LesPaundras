@@ -35,6 +35,7 @@ class FragmentHome : Fragment() {
         mapFragment = childFragmentManager.findFragmentById(R.id.home_view_map) as SupportMapFragment
         mapFragment.getMapAsync{
             googleMap = it
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(19.4362, -99.1373), 10f))
             setRoute()
         }
     }
