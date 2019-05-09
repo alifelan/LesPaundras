@@ -354,6 +354,18 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    fun rateDriver(email: String, rating: Float, completion: (trip : TaxiTrip?, success: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.RateDriver(email, rating, ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                val trip: TaxiTrip = Gson().fromJson(response.json.toString(), TaxiTrip::class.java)
+                completion.invoke(trip, success, "Successful rating")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
+
     fun getUserBusTrips(busTripId: Int, email: String, completion: (trips: MutableList<TaxiTrip>?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetUserBusTrips(busTripId, email, ctx)
         this.performRequest(route) {success, response ->

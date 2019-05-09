@@ -56,6 +56,7 @@ sealed class ApiRoute {
     data class GetUserTaxiTrips(var email: String, var ctx: Context) : ApiRoute()
     data class CancelTrip(var tripId: String, var ctx: Context) : ApiRoute()
     data class GetUserBusTrips(var id: Int, var email: String, var ctx: Context): ApiRoute()
+    data class RateDriver(var email: String, var rating: Float, var ctx: Context): ApiRoute()
 
     /**
      * Url to be used for the api call
@@ -79,6 +80,7 @@ sealed class ApiRoute {
                 is GetUserTaxiTrips -> "$baseUrl/userTaxiTrips/${this.email}"
                 is CancelTrip -> "$baseUrl/cancelTrip/"
                 is GetUserBusTrips -> "$baseUrl/getUserBusTrips/${this.id}/${this.email}"
+                is RateDriver -> "$baseUrl/rateDriver/"
             }
         }
 
@@ -101,6 +103,7 @@ sealed class ApiRoute {
                 is GetUserTaxiTrips -> Request.Method.GET
                 is CancelTrip -> Request.Method.POST
                 is GetUserBusTrips -> Request.Method.GET
+                is RateDriver -> Request.Method.POST
             }
         }
 
@@ -169,6 +172,11 @@ sealed class ApiRoute {
                     json.put("taxiTripId", this.tripId)
                 }
                 is GetUserBusTrips -> null
+                is RateDriver -> {
+                    val json = JSONObject()
+                    json.put("taxiTripId", this.email)
+                    json.put("rating", this.rating)
+                }
             }
         }
 
