@@ -103,3 +103,10 @@ data class TaxiTrip(
     @SerializedName("user_rating") var userRating: Double
 ) : JSONConvertable, Parcelable
 
+@Parcelize
+data class UserTaxiTrips(
+    @SerializedName("past_trips") var pastTrips: List<TaxiTrip>,
+    @SerializedName("future_trips") var futureTrips: List<TaxiTrip>,
+    @SerializedName("current_trip") var currentTrips: List<TaxiTrip>
+) : JSONConvertable, Parcelable
+
