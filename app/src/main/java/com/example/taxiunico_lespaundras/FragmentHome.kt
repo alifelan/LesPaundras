@@ -32,6 +32,7 @@ class FragmentHome : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        Thread.sleep(2_000)
         model = activity?.run {
             ViewModelProviders.of(this).get(UserViewModel::class.java)
         } ?: throw Exception("Invalid activity")
@@ -51,13 +52,27 @@ class FragmentHome : Fragment() {
         home_text_dest.text = trip.destination.name
         home_text_driver_info_name.text = trip.taxi.driverName
         home_text_driver_info_brand.text = trip.taxi.brand
+        home_text_driver_info_model.text = trip.taxi.model
         home_text_driver_info_plates.text = trip.taxi.plate
         home_text_driver_info_taxiNum.text = trip.taxi.taxi_number
+    }
+
+    private fun setInfoVisibility(visibility: Int) {
+        home_text_src.visibility = visibility
+        home_text_dest.visibility = visibility
+        home_text_yourDriver.visibility = visibility
+        home_text_driver_info_name.visibility = visibility
+        home_text_driver_info_brand.visibility = visibility
+        home_text_driver_info_model.visibility = visibility
+        home_text_driver_info_plates.visibility = visibility
+        home_text_driver_info_taxiNum.visibility = visibility
+        home_image_driver.visibility = visibility
     }
 
     private fun setRoute() {
         ApiClient(activity?.applicationContext!!).getCurrentOrNextTrip(model.user?.email!!) {trip, current, success, message ->
             if(success && trip != null) {
+                setInfoVisibility(View.VISIBLE)
                 setInfo(trip, current)
                 val origin = "${trip?.origin?.address},${trip?.origin?.city},${trip?.origin?.state}"
                 val destination = "${trip?.destination?.address},${trip?.destination?.city},${trip?.destination?.state}"
@@ -78,6 +93,8 @@ class FragmentHome : Fragment() {
                     }
                 }
             } else {
+                home_text_title.text = "No trip"
+                setInfoVisibility(View.INVISIBLE)
                 Toast.makeText(activity?.applicationContext, message, Toast.LENGTH_SHORT).show()
             }
         }

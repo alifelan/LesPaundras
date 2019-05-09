@@ -8,6 +8,7 @@ import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
+import org.json.JSONArray
 import org.json.JSONObject
 
 /**
@@ -315,12 +316,53 @@ class ApiClient(private val ctx: Context) {
     fun getCurrentOrNextTrip(email: String, completion: (trip: TaxiTrip?, current: Boolean, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetCurrentOrNext(email, ctx)
         this.performRequest(route) {success, response ->
-            if(success) {
+            if(success && response.json.optJSONObject("taxi_trip") != null) {
                 val current = response.json.getBoolean("current")
                 val trip: TaxiTrip = Gson().fromJson(response.json.getJSONObject("taxi_trip").toString(), TaxiTrip::class.java)
                 completion.invoke(trip, current, success, response.message)
             } else {
                 completion.invoke(null, false, success, "Unable to get trip")
+            }
+        }
+    }
+
+    fun getUserTaxiTrips(email: String, completion: (trips: UserTaxiTrips?, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.GetUserTaxiTrips(email, ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                val trips: UserTaxiTrips = Gson().fromJson(response.json.toString(), UserTaxiTrips::class.java)
+                completion.invoke(trips, success, "Got all user trips")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
+
+    fun cancelTaxiTrip(tripId: String, completion: (trip: TaxiTrip?, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.CancelTrip(tripId, ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                val trip: TaxiTrip = Gson().fromJson(response.json.toString(), TaxiTrip::class.java)
+                completion.invoke(trip, success, "Trip cancelled")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
+
+    fun getUserBusTrips(busTripId: Int, email: String, completion: (trips: MutableList<TaxiTrip>?, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.GetUserBusTrips(busTripId, email, ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                var trips: MutableList<TaxiTrip>? = mutableListOf()
+                var trips_json: JSONArray = response.json.getJSONArray("trips")
+                for (i in 0 until trips_json.length()) {
+                    val trip: TaxiTrip = Gson().fromJson(trips_json.getJSONObject(i).toString(), TaxiTrip::class.java)
+                    trips?.add(trip)
+                }
+                completion.invoke(trips, success, "User rides fetched")
+            } else {
+                completion.invoke(null, success, response.message)
             }
         }
     }

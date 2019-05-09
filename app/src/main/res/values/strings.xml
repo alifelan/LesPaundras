@@ -43,10 +43,19 @@
     <!-- Strings related to RatingActivity -->
     <string name="rating_title">Rate driver</string>
     <string name="rating_button_rate">Rate</string>
+    <!-- Strings related to rows in Trips Fragment -->
+    <string name="row_trip_code">Trip code: 12345</string>
+    <string name="row_price">$85.53</string>
+    <string name="row_src_dest">MTY-REYNOSA</string>
+    <string name="row_src_address">Source: Garza Sada 2501, Mty</string>
+    <string name="row_dest_address">Destination: Central Mty</string>
+    <string name="row_date">15/4/2019, 11:32 AM</string>
+    <string name="row_driver">Rolando Gomez</string>
+    <string name="row_driver_plate">FKD-8862</string>
+    <string name="row_status">Status: Pending</string>
     <!-- Miscellaneous strings -->
     <string name="button_ok">OK</string>
     <string name="button_save_changes">Save changes</string>
-    <string name="address_success">Change address</string>
     <string name="address_set">Address set success</string>
     <string name="add_round_trip">Add roundtrip trip</string>
     <string name="back_trip">Set comeback trip</string>
@@ -66,4 +75,6 @@
     <string name="password_key">password</string>
     <string name="date_key">date</string>
     <string name="logout">Log Out</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="address_success">Address set</string>
 </resources>

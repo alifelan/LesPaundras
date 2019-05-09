@@ -78,7 +78,7 @@ data class Address(
  */
 @Parcelize
 data class Taxi(
-    @SerializedName("id") var id: String = "",
+    @SerializedName("email") var email: String = "",
     @SerializedName("driver_name") var driverName: String = "",
     @SerializedName("plate") var plate: String = "",
     @SerializedName("model") var model: String = "",
@@ -100,6 +100,15 @@ data class TaxiTrip(
     @SerializedName("taxi") var taxi: Taxi,
     @SerializedName("price") var price: Double,
     @SerializedName("taxi_rating") var taxiRating: Double,
-    @SerializedName("user_rating") var userRating: Double
+    @SerializedName("user_rating") var userRating: Double,
+    @SerializedName("status") var status: String
+) : JSONConvertable, Parcelable
+
+@Parcelize
+data class UserTaxiTrips(
+    @SerializedName("past_trips") var pastTrips: MutableList<TaxiTrip>,
+    @SerializedName("future_trips") var futureTrips: MutableList<TaxiTrip>,
+    @SerializedName("current_trip") var currentTrips: MutableList<TaxiTrip>,
+    @SerializedName("cancelled_trips") var cancelledTrips: MutableList<TaxiTrip>
 ) : JSONConvertable, Parcelable
 
