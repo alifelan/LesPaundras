@@ -55,7 +55,7 @@ sealed class ApiRoute {
     data class GetCurrentOrNext(var email: String, var ctx: Context) : ApiRoute()
     data class GetUserTaxiTrips(var email: String, var ctx: Context) : ApiRoute()
     data class CancelTrip(var tripId: String, var ctx: Context) : ApiRoute()
-    data class GetUserBusTrips(var id: Int, var email: String): ApiRoute()
+    data class GetUserBusTrips(var id: Int, var email: String, var ctx: Context): ApiRoute()
 
     /**
      * Url to be used for the api call
