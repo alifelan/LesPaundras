@@ -315,7 +315,7 @@ class ApiClient(private val ctx: Context) {
     fun getCurrentOrNextTrip(email: String, completion: (trip: TaxiTrip?, current: Boolean, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetCurrentOrNext(email, ctx)
         this.performRequest(route) {success, response ->
-            if(success) {
+            if(success && response.json.optJSONObject("taxi_trip") != null) {
                 val current = response.json.getBoolean("current")
                 val trip: TaxiTrip = Gson().fromJson(response.json.getJSONObject("taxi_trip").toString(), TaxiTrip::class.java)
                 completion.invoke(trip, current, success, response.message)
@@ -331,6 +331,18 @@ class ApiClient(private val ctx: Context) {
             if(success) {
                 val trips: UserTaxiTrips = Gson().fromJson(response.json.toString(), UserTaxiTrips::class.java)
                 completion.invoke(trips, success, "Got all user trips")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
+
+    fun cancelTaxiTrip(tripId: String, completion: (trip: TaxiTrip?, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.CancelTrip(tripId, ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                val trip: TaxiTrip = Gson().fromJson(response.json.toString(), TaxiTrip::class.java)
+                completion.invoke(trip, success, "Trip cancelled")
             } else {
                 completion.invoke(null, success, response.message)
             }
