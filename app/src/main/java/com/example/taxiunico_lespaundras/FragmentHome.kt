@@ -4,6 +4,7 @@ import ApiUtility.ApiClient
 import ApiUtility.TaxiTrip
 import ViewModels.UserViewModel
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -70,7 +71,14 @@ class FragmentHome : Fragment() {
     }
 
     private fun setRoute() {
-        ApiClient(activity?.applicationContext!!).getCurrentOrNextTrip(model.user?.email!!) {trip, current, success, message ->
+        ApiClient(activity?.applicationContext!!).getCurrentOrNextTrip(model.user?.email!!) {trip, rate, current, success, message ->
+            if(rate != null) {
+                val rateIntent = Intent(activity, RatingActivity::class.java).apply {
+                    putExtra(TRIP, trip)
+                    putExtra(LoginActivity.EMAIL, trip?.user?.email)
+                }
+                startActivity(rateIntent)
+            }
             if(success && trip != null) {
                 setInfoVisibility(View.VISIBLE)
                 setInfo(trip, current)
@@ -102,5 +110,9 @@ class FragmentHome : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
+    }
+
+    companion object {
+        const val TRIP = "Trip"
     }
 }
