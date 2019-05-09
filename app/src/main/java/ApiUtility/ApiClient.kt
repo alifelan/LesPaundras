@@ -324,4 +324,16 @@ class ApiClient(private val ctx: Context) {
             }
         }
     }
+
+    fun getUserTaxiTrips(email: String, completion: (trips: UserTaxiTrips?, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.GetUserTaxiTrips(email, ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                val trips: UserTaxiTrips = Gson().fromJson(response.json.toString(), UserTaxiTrips::class.java)
+                completion.invoke(trips, success, "Got all user trips")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
 }
