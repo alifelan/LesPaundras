@@ -14,6 +14,9 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_add_trip.*
 import kotlinx.android.synthetic.main.fragment_add_trip.*
 
+/**
+ * Activity used to register taxi trips for a user
+ */
 class AddTripActivity : AppCompatActivity() {
 
     lateinit var trip: BusTrip

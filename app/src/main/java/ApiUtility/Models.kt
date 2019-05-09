@@ -5,6 +5,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * User data class to hold results from api
+ */
 @Parcelize
 data class User(
     @SerializedName("name") var name: String = "",
@@ -13,6 +16,9 @@ data class User(
     @SerializedName("trips") var trips : Int = 0
 ) : JSONConvertable, Parcelable
 
+/**
+ * Place data class to hold results from api
+ */
 @Parcelize
 data class Place(
     @SerializedName("id") var id: String = "",
@@ -24,6 +30,9 @@ data class Place(
     @SerializedName("longitude") var longitude: Double = 0.0
 ) : JSONConvertable, Parcelable
 
+/**
+ * BusTrip data class to hold results from api
+ */
 @Parcelize
 data class BusTrip(
     @SerializedName("id") var id: String = "",
@@ -36,12 +45,18 @@ data class BusTrip(
     @SerializedName("round_trip") var roundtrip: Boolean
 ) : JSONConvertable, Parcelable
 
+/**
+ * ValueText data class to hold results from api
+ */
 @Parcelize
 data class ValueText(
     @SerializedName("value") var value: Int = 0,
     @SerializedName("text") var text: String = ""
 ): JSONConvertable, Parcelable
 
+/**
+ * Route data class to hold results from api
+ */
 @Parcelize
 data class Route(
     var points: List<LatLng>,
@@ -49,12 +64,18 @@ data class Route(
     var distance: ValueText
 ) : Parcelable
 
+/**
+ * Address data class to hold results from api
+ */
 @Parcelize
 data class Address(
     var address: String,
     var coordinates: LatLng
 ) : Parcelable
 
+/**
+ * Taxi data class to hold results from api
+ */
 @Parcelize
 data class Taxi(
     @SerializedName("id") var id: String = "",
@@ -65,6 +86,9 @@ data class Taxi(
     @SerializedName("taxi_number") var taxi_number: String = ""
 ) : JSONConvertable, Parcelable
 
+/**
+ * TaxiTrip data class to hold results from api
+ */
 @Parcelize
 data class TaxiTrip(
     @SerializedName("id") var id: String = "",

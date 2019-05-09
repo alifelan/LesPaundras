@@ -10,10 +10,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import org.json.JSONObject
 
+/**
+ * Class in charge of actually halding the http requests
+ */
 class ApiClient(private val ctx: Context) {
 
     /***
-     * PERFORM REQUEST
+     * Make api call
      */
     private fun performRequest(route: ApiRoute, completion: (success: Boolean, apiResponse: ApiResponse) -> Unit) {
         val request: JsonObjectRequest =
@@ -43,7 +46,7 @@ class ApiClient(private val ctx: Context) {
     }
 
     /**
-     * This method will make the creation of the answer as ApiResponse
+     * Creates ApiResponse to be used
      **/
     private fun handle(response: JSONObject, completion: (success: Boolean, apiResponse: ApiResponse) -> Unit) {
         val ar = ApiResponse(response)
@@ -78,6 +81,9 @@ class ApiClient(private val ctx: Context) {
         return mRequestQueue
     }
 
+    /**
+     * Get a random bus trip id
+     */
     fun getRandomBusTrip(completion: (randomTrip: String?, message: String) -> Unit) {
         val route = ApiRoute.RandomBusTrip(ctx)
         this.performRequest(route) { success, response ->
@@ -89,6 +95,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Login user to the application
+     */
     fun login(email: String, password: String, completion: (logged: Boolean, message: String) -> Unit) {
         val route = ApiRoute.Login(email, password, ctx)
         this.performRequest(route) { success, response ->
@@ -96,6 +105,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Used to register users in the application
+     */
     fun createUser(
         name: String,
         email: String,
@@ -114,6 +126,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Get user information
+     */
     fun getUser(email: String, completion: (user: User?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.UserData(email, ctx)
         this.performRequest(route) { success, response ->
@@ -126,6 +141,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Update user
+     */
     fun updateUser(
         name: String,
         email: String,
@@ -144,6 +162,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Get a bustrip by an id
+     */
     fun getBusTrip(id: String, completion: (trip: BusTrip?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetBusTrip(id, ctx)
         this.performRequest(route) { success, response ->
@@ -156,6 +177,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Call google maps api to get coordinates from an addres
+     */
     fun getCoordinates(address: String, completion: (coord: LatLng?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetGeoCoding(address, ctx)
         this.performRequest(route) { success, response ->
@@ -173,6 +197,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Used to decode polylines received from the google directions api
+     */
     private fun decodePoly(encoded: String): List<LatLng> {
         val poly = ArrayList<LatLng>()
         var index = 0
@@ -212,6 +239,9 @@ class ApiClient(private val ctx: Context) {
         return poly
     }
 
+    /**
+     * Call to the google directions api
+     */
     fun getDirections(
         origin: String,
         destination: String,
@@ -255,6 +285,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Create a taxi trip in the application
+     */
     fun createTaxiTrip(
         email: String,
         busTripId: String,

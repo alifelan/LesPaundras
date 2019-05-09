@@ -21,6 +21,9 @@ import kotlinx.android.synthetic.main.activity_register.login_progress
 import kotlinx.android.synthetic.main.activity_register.password
 import java.util.*
 
+/**
+ * Activity in charge of registering an user with no previous account
+ */
 class RegisterActivity : AppCompatActivity() {
 
     lateinit var sharedPref: SharedPreferences
