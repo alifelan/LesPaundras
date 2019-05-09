@@ -10,9 +10,6 @@ import kotlinx.android.synthetic.main.fragment_home.*
 class FragmentHome : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        home_text_src_dest.text = "MTY - REYNOSA"
-        home_text_driver_info.text = "José Ortíz\nNissan Versa\nSDG-5866"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
