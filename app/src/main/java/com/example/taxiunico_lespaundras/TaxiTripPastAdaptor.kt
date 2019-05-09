@@ -1,11 +1,13 @@
 package com.example.taxiunico_lespaundras
 
+import ApiUtility.ApiClient
 import ApiUtility.TaxiTrip
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Toast
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.row_past_trip.*
 
@@ -41,6 +43,14 @@ class TaxiTripPastAdaptor(private val context: Context, private val trips: Mutab
         return trips.size
     }
 
+    fun removeTrip(id: String) {
+        val trip = trips.find{trip ->
+            trip.id == id
+        }
+        trips.remove(trip)
+        notifyDataSetChanged()
+    }
+
     inner class TaxiTripViewHolder(override val containerView: View) : LayoutContainer {
         fun bind(trip: TaxiTrip) {
             row_past_text_trip_code.text = trip.busTrip.id
@@ -52,6 +62,16 @@ class TaxiTripPastAdaptor(private val context: Context, private val trips: Mutab
             row_past_text_driver.text = trip.taxi.driverName
             row_past_text_driver_plate.text = trip.taxi.plate
             row_past_text_status.text = trip.status
+
+            row_past_button_cancel.setOnClickListener {
+                ApiClient(context).cancelTaxiTrip(trip.id) {_, success, message ->
+                    if(success) {
+                        removeTrip(trip.id)
+                    } else {
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 }
