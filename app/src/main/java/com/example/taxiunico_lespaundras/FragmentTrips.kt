@@ -29,7 +29,9 @@ class FragmentTrips : Fragment() {
         } ?: throw Exception("Invalid activity")
         ApiClient(activity?.applicationContext!!).getUserTaxiTrips(model.user?.email!!) {trips, success, message ->
             if(success) {
-                val tripsAdapter: TaxiTripAdaptor = TaxiTripAdaptor(activity?.applicationContext!!, trips?.pastTrips!!)
+                val pastTrips = trips?.pastTrips!!
+                pastTrips.addAll(trips.cancelledTrips)
+                val tripsAdapter: TaxiTripAdaptor = TaxiTripAdaptor(activity?.applicationContext!!, pastTrips)
                 tripsAdapter.notifyDataSetChanged()
                 trips_list_past.adapter = tripsAdapter
                 val pastAdapter: TaxiTripPastAdaptor = TaxiTripPastAdaptor(activity?.applicationContext!!, trips.futureTrips)
