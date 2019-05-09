@@ -350,7 +350,7 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
-    fun getUserBusTrips(busTripId: Int, email: String, completion: (trips: MutableList<TaxiTrip>?, status: Boolean, message: String) -> Unit {
+    fun getUserBusTrips(busTripId: Int, email: String, completion: (trips: MutableList<TaxiTrip>?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetUserBusTrips(busTripId, email, ctx)
         this.performRequest(route) {success, response ->
             if(success) {
