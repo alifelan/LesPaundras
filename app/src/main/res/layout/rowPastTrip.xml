@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+            android:id="@+id/row_past_text_trip_code"
+            android:text="@string/row_trip_code"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/row_past_text_price"/>
+
+    <TextView
+            android:id="@+id/row_past_text_price"
+            android:text="@string/row_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/row_past_text_src_dest"
+            app:layout_constraintLeft_toRightOf="@id/row_past_text_trip_code"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+            android:id="@+id/row_past_text_src_dest"
+            android:text="@string/row_src_dest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/row_past_text_trip_code"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+            android:id="@+id/row_past_text_src_address"
+            android:text="@string/row_src_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/row_past_text_src_dest"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+            android:id="@+id/row_past_text_dest_address"
+            android:text="@string/row_dest_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/row_past_text_src_address"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+            android:id="@+id/row_past_text_date"
+            android:text="@string/row_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/row_past_text_dest_address"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <ImageView
+            android:id="@+id/row_past_image_driver"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_person_black_24dp"
+            app:layout_constraintTop_toBottomOf="@id/row_past_text_date"
+            app:layout_constraintBottom_toTopOf="@id/row_past_text_status"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+            android:id="@+id/row_past_text_driver"
+            android:text="@string/row_driver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/row_past_text_date"
+            app:layout_constraintLeft_toRightOf="@id/row_past_image_driver"/>
+
+    <TextView
+            android:id="@+id/row_past_text_driver_plate"
+            android:text="@string/row_driver_plate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/row_past_text_driver"
+            app:layout_constraintLeft_toRightOf="@id/row_past_image_driver"/>
+
+    <TextView
+            android:id="@+id/row_past_text_status"
+            android:text="Status: Pending"
+            android:textStyle="italic"
+            android:textColor="@color/design_default_color_primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/row_past_text_driver_plate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+    />
+
+    <Button android:id="@+id/row_past_button_cancel"
+            android:text="@string/button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+    />
+
+</android.support.constraint.ConstraintLayout>
