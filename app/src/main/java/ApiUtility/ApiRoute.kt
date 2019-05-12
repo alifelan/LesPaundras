@@ -80,6 +80,7 @@ sealed class ApiRoute {
     data class CancelTrip(var tripId: String, var ctx: Context) : ApiRoute()
     data class GetUserBusTrips(var id: String, var email: String, var ctx: Context): ApiRoute()
     data class RateDriver(var email: String, var rating: Float, var ctx: Context): ApiRoute()
+    data class UpdateTripAddress(var tripId: String, var name: String, var state: String, var city: String, var address: String, var latlng: LatLng, var ctx: Context) : ApiRoute()
 
     /**
      * Url to be used for the api call
@@ -104,6 +105,7 @@ sealed class ApiRoute {
                 is CancelTrip -> "$baseUrl/cancelTrip/"
                 is GetUserBusTrips -> "$baseUrl/getUserBusTrips/${this.id}/${this.email}"
                 is RateDriver -> "$baseUrl/rateDriver/"
+                is UpdateTripAddress -> "$baseUrl/updateTaxiTripLocation/"
             }
         }
 
@@ -127,6 +129,7 @@ sealed class ApiRoute {
                 is CancelTrip -> Request.Method.POST
                 is GetUserBusTrips -> Request.Method.GET
                 is RateDriver -> Request.Method.POST
+                is UpdateTripAddress -> Request.Method.PUT
             }
         }
 
@@ -199,6 +202,18 @@ sealed class ApiRoute {
                     val json = JSONObject()
                     json.put("taxiTripId", this.email)
                     json.put("rating", this.rating)
+                }
+                is UpdateTripAddress -> {
+                    val json = JSONObject()
+                    json.put("taxiTripId", this.tripId)
+                    json.put("location", JSONObject().apply {
+                        put("name", this@ApiRoute.name)
+                        put("state", this@ApiRoute.state)
+                        put("city", this@ApiRoute.city)
+                        put("address", this@ApiRoute.address)
+                        put("latitude", this@ApiRoute.latlng.latitude)
+                        put("longitude", this@ApiRoute.latlng.longitude)
+                    })
                 }
             }
         }
