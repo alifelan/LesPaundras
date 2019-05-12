@@ -94,6 +94,9 @@ class AddAddressActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Create the marker for the map
+     */
     fun setMarker() {
         if(add_address_editable.text.isNotEmpty()) {
             ApiClient(this@AddAddressActivity).getCoordinates(add_address_editable.text.toString()) { coord, success, message ->
@@ -112,7 +115,9 @@ class AddAddressActivity : AppCompatActivity() {
         }
     }
 
-    // back button
+    /**
+     * back
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == android.R.id.home) {
