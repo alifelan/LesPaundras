@@ -35,7 +35,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /**
- * Class in charge of actually halding the http requests
+ * Class in charge of actually handling the http requests
  */
 class ApiClient(private val ctx: Context) {
 
@@ -202,7 +202,7 @@ class ApiClient(private val ctx: Context) {
     }
 
     /**
-     * Call google maps api to get coordinates from an addres
+     * Call google maps api to get coordinates from an address
      */
     fun getCoordinates(address: String, completion: (coord: LatLng?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetGeoCoding(address, ctx)
@@ -336,6 +336,11 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Get the closest trip that the user takes
+     * If user has a current trip, return it
+     * If it doesn't, return the closest pending trip
+     */
     fun getCurrentOrNextTrip(email: String, completion: (trip: TaxiTrip?, rate: TaxiTrip? ,current: Boolean, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetCurrentOrNext(email, ctx)
         this.performRequest(route) {success, response ->
@@ -353,6 +358,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * returns all the trips of the user (for the trip records)
+     */
     fun getUserTaxiTrips(email: String, completion: (trips: UserTaxiTrips?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetUserTaxiTrips(email, ctx)
         this.performRequest(route) {success, response ->
@@ -365,6 +373,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Post method that cancels a trip
+     */
     fun cancelTaxiTrip(tripId: String, completion: (trip: TaxiTrip?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.CancelTrip(tripId, ctx)
         this.performRequest(route) {success, response ->
@@ -377,6 +388,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Post method to rate driver from trip
+     */
     fun rateDriver(email: String, rating: Float, completion: (trip : TaxiTrip?, success: Boolean, message: String) -> Unit) {
         val route = ApiRoute.RateDriver(email, rating, ctx)
         this.performRequest(route) {success, response ->
@@ -389,6 +403,10 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Get the trips belonging to a certain bus ticket id
+     * e.g. the rides from source to bus terminal A, from terminal A to dest
+     */
     fun getUserBusTrips(busTripId: String, email: String, completion: (trip1: TaxiTrip?, trip2: TaxiTrip?, trip3: TaxiTrip? , trip4: TaxiTrip?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetUserBusTrips(busTripId, email, ctx)
         this.performRequest(route) {success, response ->
