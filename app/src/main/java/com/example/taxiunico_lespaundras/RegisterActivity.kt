@@ -91,6 +91,9 @@ class RegisterActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    /**
+     * Check if entered credentials are valid
+     */
     private fun parametersAreValid(): Boolean {
         return !(name.text?.isEmpty() ?: false || email.text.isEmpty() || password.text.isEmpty() || card.text?.isEmpty() ?: false) && email.text.contains(
             "@"
