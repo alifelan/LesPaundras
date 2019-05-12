@@ -84,6 +84,9 @@ class FragmentTrips : Fragment(), UpdateClickListener {
                 val tripsAdapter: TaxiTripAdaptor = TaxiTripAdaptor(activity?.applicationContext!!, pastTrips)
                 tripsAdapter.notifyDataSetChanged()
                 trips_list_past.adapter = tripsAdapter
+                if(trips.futureTrips.isEmpty()) {
+                    Toast.makeText(activity, "No upcoming trips", Toast.LENGTH_SHORT).show()
+                }
                 val pastAdapter: TaxiTripPastAdaptor = TaxiTripPastAdaptor(activity?.applicationContext!!, trips.futureTrips, this)
                 pastAdapter.notifyDataSetChanged()
                 trips_list_upcoming.adapter = pastAdapter
