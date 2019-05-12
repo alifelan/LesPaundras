@@ -403,4 +403,16 @@ class ApiClient(private val ctx: Context) {
             }
         }
     }
+
+    fun updateTaxiTripAddress(tripId: String, name: String, state: String, city: String, address: String, latlng: LatLng, completion: (trip: TaxiTrip?, success: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.UpdateTripAddress(tripId, name, state, city ,address, latlng, ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                val trip: TaxiTrip = Gson().fromJson(response.json.toString(), TaxiTrip::class.java)
+                completion.invoke(trip, success, "Address updated")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
 }

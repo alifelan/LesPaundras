@@ -11,7 +11,7 @@ import android.widget.Toast
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.row_past_trip.*
 
-class TaxiTripPastAdaptor(private val context: Context, private val trips: MutableList<TaxiTrip>) : BaseAdapter() {
+class TaxiTripPastAdaptor(private val context: Context, private val trips: MutableList<TaxiTrip>, private val listener: UpdateClickListener) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?):View {
         val taxiTripHolder: TaxiTripViewHolder
@@ -62,6 +62,10 @@ class TaxiTripPastAdaptor(private val context: Context, private val trips: Mutab
             row_past_text_driver.text = trip.taxi.driverName
             row_past_text_driver_plate.text = trip.taxi.plate
             row_past_text_status.text = trip.status
+
+            containerView.setOnClickListener{
+                listener.onUpdateClickListener(trip)
+            }
 
             row_past_button_cancel.setOnClickListener {
                 ApiClient(context).cancelTaxiTrip(trip.id) {_, success, message ->

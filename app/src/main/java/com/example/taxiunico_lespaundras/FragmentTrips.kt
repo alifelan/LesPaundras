@@ -23,9 +23,14 @@
  */
 package com.example.taxiunico_lespaundras
 
+import ApiUtility.Address
 import ApiUtility.ApiClient
+import ApiUtility.Place
+import ApiUtility.TaxiTrip
 import ViewModels.UserViewModel
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -38,8 +43,9 @@ import java.lang.Exception
 /**
  * Shows trips pending and completed by a user
  */
-class FragmentTrips : Fragment() {
+class FragmentTrips : Fragment(), UpdateClickListener {
     private lateinit var model: UserViewModel
+    lateinit var updateTrip: TaxiTrip
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_trips, container, false)
@@ -50,6 +56,27 @@ class FragmentTrips : Fragment() {
         model = activity?.run {
             ViewModelProviders.of(this).get(UserViewModel::class.java)
         } ?: throw Exception("Invalid activity")
+        fillLists()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK) {
+            if(requestCode == ADDRESS_UPDATE) {
+                val address: Address? = data?.extras?.getParcelable(AddAddressActivity.ADDRESS)
+                val place: Place = if(updateTrip.busTrip.origin.address == updateTrip.destination.address) updateTrip.origin else updateTrip.destination
+                ApiClient(activity?.applicationContext!!).updateTaxiTripAddress(updateTrip.id, address?.address!!, place.state, place.city, address.address, address.coordinates) { trip, success, message ->
+                    if(success) {
+                        fillLists()
+                    } else {
+                        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    fun fillLists() {
         ApiClient(activity?.applicationContext!!).getUserTaxiTrips(model.user?.email!!) {trips, success, message ->
             if(success) {
                 val pastTrips = trips?.pastTrips!!
@@ -57,12 +84,24 @@ class FragmentTrips : Fragment() {
                 val tripsAdapter: TaxiTripAdaptor = TaxiTripAdaptor(activity?.applicationContext!!, pastTrips)
                 tripsAdapter.notifyDataSetChanged()
                 trips_list_past.adapter = tripsAdapter
-                val pastAdapter: TaxiTripPastAdaptor = TaxiTripPastAdaptor(activity?.applicationContext!!, trips.futureTrips)
+                val pastAdapter: TaxiTripPastAdaptor = TaxiTripPastAdaptor(activity?.applicationContext!!, trips.futureTrips, this)
                 pastAdapter.notifyDataSetChanged()
                 trips_list_upcoming.adapter = pastAdapter
             } else {
                 Toast.makeText(activity?.applicationContext, message, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onUpdateClickListener(trip: TaxiTrip) {
+        updateTrip = trip
+        val updateAddressIntent = Intent(activity, AddAddressActivity::class.java).apply {
+            putExtra(AddTripActivity.SRCDEST, "update")
+        }
+        startActivityForResult(updateAddressIntent, ADDRESS_UPDATE)
+    }
+
+    companion object {
+        const val ADDRESS_UPDATE = 10
     }
 }
