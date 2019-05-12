@@ -9,6 +9,9 @@ import android.widget.BaseAdapter
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.row.*
 
+/**
+ * This class contains information of the pending trips the user has
+ */
 class TaxiTripAdaptor(private val context: Context, private val trips: MutableList<TaxiTrip>) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?):View {
