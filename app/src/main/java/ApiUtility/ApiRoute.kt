@@ -32,6 +32,8 @@ import kotlin.collections.HashMap
 
 /**
  * Class in charge of holding routes for api calls
+ * All data classes belonging to the calls to the API are declared here, as well
+ * as their type of request (GET, POST)
  */
 sealed class ApiRoute {
 

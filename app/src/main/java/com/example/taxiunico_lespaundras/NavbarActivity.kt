@@ -105,11 +105,17 @@ class NavbarActivity : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
 
+    /**
+     * función para crear menú de opciones superior
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_bar, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
+    /**
+     * botón de logout
+     */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
             R.id.widget_logout -> {

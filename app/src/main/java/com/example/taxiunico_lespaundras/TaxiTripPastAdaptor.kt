@@ -11,8 +11,10 @@ import android.widget.Toast
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.row_past_trip.*
 
+/**
+ * This class contains information of the past trips the user had
+ */
 class TaxiTripPastAdaptor(private val context: Context, private val trips: MutableList<TaxiTrip>, private val listener: UpdateClickListener) : BaseAdapter() {
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?):View {
         val taxiTripHolder: TaxiTripViewHolder
         val rowView: View
