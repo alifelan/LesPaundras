@@ -78,7 +78,7 @@ sealed class ApiRoute {
     data class GetCurrentOrNext(var email: String, var ctx: Context) : ApiRoute()
     data class GetUserTaxiTrips(var email: String, var ctx: Context) : ApiRoute()
     data class CancelTrip(var tripId: String, var ctx: Context) : ApiRoute()
-    data class GetUserBusTrips(var id: Int, var email: String, var ctx: Context): ApiRoute()
+    data class GetUserBusTrips(var id: String, var email: String, var ctx: Context): ApiRoute()
     data class RateDriver(var email: String, var rating: Float, var ctx: Context): ApiRoute()
 
     /**
