@@ -31,12 +31,16 @@ import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
+import org.json.JSONArray
 import org.json.JSONObject
 
+/**
+ * Class in charge of actually halding the http requests
+ */
 class ApiClient(private val ctx: Context) {
 
     /***
-     * PERFORM REQUEST
+     * Make api call
      */
     private fun performRequest(route: ApiRoute, completion: (success: Boolean, apiResponse: ApiResponse) -> Unit) {
         val request: JsonObjectRequest =
@@ -66,7 +70,7 @@ class ApiClient(private val ctx: Context) {
     }
 
     /**
-     * This method will make the creation of the answer as ApiResponse
+     * Creates ApiResponse to be used
      **/
     private fun handle(response: JSONObject, completion: (success: Boolean, apiResponse: ApiResponse) -> Unit) {
         val ar = ApiResponse(response)
@@ -101,6 +105,9 @@ class ApiClient(private val ctx: Context) {
         return mRequestQueue
     }
 
+    /**
+     * Get a random bus trip id
+     */
     fun getRandomBusTrip(completion: (randomTrip: String?, message: String) -> Unit) {
         val route = ApiRoute.RandomBusTrip(ctx)
         this.performRequest(route) { success, response ->
@@ -112,6 +119,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Login user to the application
+     */
     fun login(email: String, password: String, completion: (logged: Boolean, message: String) -> Unit) {
         val route = ApiRoute.Login(email, password, ctx)
         this.performRequest(route) { success, response ->
@@ -119,6 +129,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Used to register users in the application
+     */
     fun createUser(
         name: String,
         email: String,
@@ -137,6 +150,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Get user information
+     */
     fun getUser(email: String, completion: (user: User?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.UserData(email, ctx)
         this.performRequest(route) { success, response ->
@@ -149,6 +165,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Update user
+     */
     fun updateUser(
         name: String,
         email: String,
@@ -167,6 +186,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Get a bustrip by an id
+     */
     fun getBusTrip(id: String, completion: (trip: BusTrip?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetBusTrip(id, ctx)
         this.performRequest(route) { success, response ->
@@ -179,6 +201,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Call google maps api to get coordinates from an addres
+     */
     fun getCoordinates(address: String, completion: (coord: LatLng?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetGeoCoding(address, ctx)
         this.performRequest(route) { success, response ->
@@ -196,6 +221,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Used to decode polylines received from the google directions api
+     */
     private fun decodePoly(encoded: String): List<LatLng> {
         val poly = ArrayList<LatLng>()
         var index = 0
@@ -235,6 +263,9 @@ class ApiClient(private val ctx: Context) {
         return poly
     }
 
+    /**
+     * Call to the google directions api
+     */
     fun getDirections(
         origin: String,
         destination: String,
@@ -278,6 +309,9 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
+    /**
+     * Create a taxi trip in the application
+     */
     fun createTaxiTrip(
         email: String,
         busTripId: String,
@@ -296,6 +330,76 @@ class ApiClient(private val ctx: Context) {
             if(success) {
                 val trip: TaxiTrip = Gson().fromJson(response.json.toString(), TaxiTrip::class.java)
                 completion.invoke(trip, success, "Created taxi trip")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
+
+    fun getCurrentOrNextTrip(email: String, completion: (trip: TaxiTrip?, rate: TaxiTrip? ,current: Boolean, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.GetCurrentOrNext(email, ctx)
+        this.performRequest(route) {success, response ->
+            if(success && response.json.optJSONObject("taxi_trip") != null) {
+                val current = response.json.getBoolean("current")
+                val trip: TaxiTrip = Gson().fromJson(response.json.getJSONObject("taxi_trip").toString(), TaxiTrip::class.java)
+                var rate: TaxiTrip? = null
+                if(response.json.getJSONArray("rate").length() > 0) {
+                    rate = Gson().fromJson(response.json.getJSONArray("rate").getJSONObject(0).toString(), TaxiTrip::class.java)
+                }
+                completion.invoke(trip, rate, current, success, response.message)
+            } else {
+                completion.invoke(null, null,false, success, "Unable to get trip")
+            }
+        }
+    }
+
+    fun getUserTaxiTrips(email: String, completion: (trips: UserTaxiTrips?, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.GetUserTaxiTrips(email, ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                val trips: UserTaxiTrips = Gson().fromJson(response.json.toString(), UserTaxiTrips::class.java)
+                completion.invoke(trips, success, "Got all user trips")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
+
+    fun cancelTaxiTrip(tripId: String, completion: (trip: TaxiTrip?, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.CancelTrip(tripId, ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                val trip: TaxiTrip = Gson().fromJson(response.json.toString(), TaxiTrip::class.java)
+                completion.invoke(trip, success, "Trip cancelled")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
+
+    fun rateDriver(email: String, rating: Float, completion: (trip : TaxiTrip?, success: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.RateDriver(email, rating, ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                val trip: TaxiTrip = Gson().fromJson(response.json.toString(), TaxiTrip::class.java)
+                completion.invoke(trip, success, "Successful rating")
+            } else {
+                completion.invoke(null, success, response.message)
+            }
+        }
+    }
+
+    fun getUserBusTrips(busTripId: Int, email: String, completion: (trips: MutableList<TaxiTrip>?, status: Boolean, message: String) -> Unit) {
+        val route = ApiRoute.GetUserBusTrips(busTripId, email, ctx)
+        this.performRequest(route) {success, response ->
+            if(success) {
+                var trips: MutableList<TaxiTrip>? = mutableListOf()
+                var trips_json: JSONArray = response.json.getJSONArray("trips")
+                for (i in 0 until trips_json.length()) {
+                    val trip: TaxiTrip = Gson().fromJson(trips_json.getJSONObject(i).toString(), TaxiTrip::class.java)
+                    trips?.add(trip)
+                }
+                completion.invoke(trips, success, "User rides fetched")
             } else {
                 completion.invoke(null, success, response.message)
             }

@@ -36,6 +36,9 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_add_trip.*
 import java.lang.Exception
 
+/**
+ * Fragment used to connect navbaractivity with AddTripActivity
+ */
 class FragmentAddTrip : Fragment() {
     private lateinit var model: UserViewModel
 
@@ -51,7 +54,7 @@ class FragmentAddTrip : Fragment() {
                     if(success) {
                         val addTripIntent = Intent(activity, AddTripActivity::class.java).apply {
                             putExtra(NavbarActivity.TRIP, trip)
-                            putExtra(NavbarActivity.FIRST, true)
+                            putExtra(NavbarActivity.FIRST, trip?.roundtrip ?: false)
                             putExtra(NavbarActivity.USER, model.user)
                         }
                         startActivity(addTripIntent)

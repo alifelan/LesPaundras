@@ -39,12 +39,16 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_add_address.*
 
+/**
+ * Activity used to register an address in a taxi trip creation
+ */
 class AddAddressActivity : AppCompatActivity() {
 
     lateinit var mapFragment : SupportMapFragment
     lateinit var googleMap: GoogleMap
-    lateinit var coordinates: LatLng
+    var coordinates: LatLng? = null
     var found = false
+    var address: Address? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,14 +60,42 @@ class AddAddressActivity : AppCompatActivity() {
         // obtain intent data and display "source" or "destination" in title
         val data = intent.extras
         val srcDest: String = data.getString(AddTripActivity.SRCDEST)
+        address = data.getParcelable(AddTripActivity.ADDRESS)
+        if(address != null) {
+            add_address_editable.setText(address?.address)
+            setMarker()
+        }
         add_address_text_title.text = "Add " + srcDest + " address"
 
         mapFragment = supportFragmentManager.findFragmentById(R.id.add_address_map) as SupportMapFragment
         mapFragment.getMapAsync(OnMapReadyCallback {
             googleMap = it
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(19.4362, -99.1373), 10f))
         })
 
         add_address_button_map.setOnClickListener {
+            setMarker()
+        }
+
+        add_address_button_ok.setOnClickListener {
+            if(add_address_editable.text.isEmpty() || coordinates == null) {
+                Toast.makeText(this, "Please set an address", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if(found) {
+                val address: Address = Address(add_address_editable.text.toString(), coordinates!!)
+                val resultIntent: Intent = Intent().apply {
+                    putExtra(ADDRESS, address)
+                }
+                Toast.makeText(this, R.string.address_set, Toast.LENGTH_SHORT).show()
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish()
+            }
+        }
+    }
+
+    fun setMarker() {
+        if(add_address_editable.text.isNotEmpty()) {
             ApiClient(this@AddAddressActivity).getCoordinates(add_address_editable.text.toString()) { coord, success, message ->
                 found = false
                 if(success && coord != null) {
@@ -75,17 +107,8 @@ class AddAddressActivity : AppCompatActivity() {
                     Toast.makeText(this@AddAddressActivity, "Failed to retrieve location", Toast.LENGTH_SHORT).show()
                 }
             }
-        }
-
-        add_address_button_ok.setOnClickListener {
-            if(found) {
-                val address: Address = Address(add_address_editable.text.toString(), coordinates)
-                val resultIntent: Intent = Intent().apply {
-                    putExtra(ADDRESS, address)
-                }
-                setResult(Activity.RESULT_OK, resultIntent)
-                finish()
-            }
+        } else {
+            Toast.makeText(this, "Please fill an address", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -96,6 +119,18 @@ class AddAddressActivity : AppCompatActivity() {
             finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putParcelable(ADDRESS, address)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        address = savedInstanceState?.getParcelable(ADDRESS)
+        if(address != null)
+            add_address_editable.setText(address?.address)
     }
 
     companion object {

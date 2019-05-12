@@ -36,6 +36,9 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_account.*
 import java.lang.Exception
 
+/**
+ * Fragment used to update user information
+ */
 class FragmentAccount : Fragment() {
 
     private lateinit var model: UserViewModel
