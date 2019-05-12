@@ -66,6 +66,9 @@ class FragmentHome : Fragment() {
         }
     }
 
+    /**
+     * sets information for trip
+     */
     private fun setInfo(trip: TaxiTrip, current: Boolean) {
         if(!current) {
             home_text_title.text = "Next trip"
@@ -79,6 +82,9 @@ class FragmentHome : Fragment() {
         home_text_driver_info_taxiNum.text = trip.taxi.taxi_number
     }
 
+    /**
+     * display trip information
+     */
     private fun setInfoVisibility(visibility: Int) {
         home_text_src.visibility = visibility
         home_text_dest.visibility = visibility
@@ -91,6 +97,9 @@ class FragmentHome : Fragment() {
         home_image_driver.visibility = visibility
     }
 
+    /**
+     * set map route to display
+     */
     private fun setRoute() {
         ApiClient(activity?.applicationContext!!).getCurrentOrNextTrip(model.user?.email!!) {trip, rate, current, success, message ->
             if(rate != null) {
