@@ -1,9 +1,6 @@
 package com.example.taxiunico_lespaundras
 
-import ApiUtility.Address
-import ApiUtility.ApiClient
-import ApiUtility.BusTrip
-import ApiUtility.User
+import ApiUtility.*
 import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -25,6 +22,10 @@ class AddTripActivity : AppCompatActivity() {
     var destination: Address? = null
     var first = false
     var fare = 0.007
+    var trip1: TaxiTrip? = null
+    var trip2: TaxiTrip? = null
+    var trip3: TaxiTrip? = null
+    var trip4: TaxiTrip? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +35,10 @@ class AddTripActivity : AppCompatActivity() {
         trip = intent.extras.getParcelable(NavbarActivity.TRIP)
         first = intent.extras.getBoolean(NavbarActivity.FIRST)
         user = intent.extras.getParcelable(NavbarActivity.USER)
+        trip1 = intent?.extras?.getParcelable(FragmentAddTrip.TRIP_1)
+        trip2 = intent?.extras?.getParcelable(FragmentAddTrip.TRIP_2)
+        trip3 = intent?.extras?.getParcelable(FragmentAddTrip.TRIP_3)
+        trip4 = intent?.extras?.getParcelable(FragmentAddTrip.TRIP_4)
 
         if (!first) {
             val aux = trip.origin
@@ -42,6 +47,19 @@ class AddTripActivity : AppCompatActivity() {
         } else {
             add_trip_activity_button_ok.text = getString(R.string.back_trip)
             add_trip_activity_text_title.text = getString(R.string.add_round_trip)
+        }
+
+        val tripSrc: TaxiTrip? = if(first == trip.roundtrip) trip1 else trip3
+        val tripDst: TaxiTrip? = if(first == trip.roundtrip) trip2 else trip4
+
+        if(tripSrc != null) {
+            add_trip_activity_button_add_src_address.isEnabled = false
+            add_trip_activity_button_add_src_address.setText(R.string.trip_exists)
+        }
+
+        if(tripDst != null) {
+            add_trip_activity_button_add_dest_address.isEnabled = false
+            add_trip_activity_button_add_dest_address.setText(R.string.trip_exists)
         }
 
         add_trip_activity_text_src_city.text = trip.origin.name
@@ -95,7 +113,7 @@ class AddTripActivity : AppCompatActivity() {
                     "${trip.origin.address},${trip.origin.city},${trip.origin.state}"
                 ) { route, success, message ->
                     if (success) {
-                        val tripT = if (first) 1 else 3
+                        val tripT = if (first == trip.roundtrip) 1 else 3
                         ApiClient(this@AddTripActivity).createTaxiTrip(
                             user.email,
                             trip.id,
@@ -119,7 +137,7 @@ class AddTripActivity : AppCompatActivity() {
                     "${trip.destination.address},${trip.destination.city},${trip.destination.state}"
                 ) { route, success, message ->
                     if (success) {
-                        val tripT = if (first) 2 else 4
+                        val tripT = if (first == trip.roundtrip) 2 else 4
                         ApiClient(this@AddTripActivity).createTaxiTrip(
                             user.email,
                             trip.id,
@@ -142,6 +160,10 @@ class AddTripActivity : AppCompatActivity() {
                     putExtra(NavbarActivity.TRIP, trip)
                     putExtra(NavbarActivity.FIRST, false)
                     putExtra(NavbarActivity.USER, user)
+                    putExtra(FragmentAddTrip.TRIP_1, trip1)
+                    putExtra(FragmentAddTrip.TRIP_2, trip2)
+                    putExtra(FragmentAddTrip.TRIP_3, trip3)
+                    putExtra(FragmentAddTrip.TRIP_4, trip4)
                 }
                 startActivity(addTripIntent)
             } else {
