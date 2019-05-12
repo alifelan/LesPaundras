@@ -29,12 +29,22 @@ class FragmentAddTrip : Fragment() {
             if(!text_code.text.isEmpty()) {
                 ApiClient(activity?.applicationContext!!).getBusTrip(text_code.text.toString()) { trip, success, message ->
                     if(success) {
-                        val addTripIntent = Intent(activity, AddTripActivity::class.java).apply {
-                            putExtra(NavbarActivity.TRIP, trip)
-                            putExtra(NavbarActivity.FIRST, trip?.roundtrip ?: false)
-                            putExtra(NavbarActivity.USER, model.user)
+                        ApiClient(activity?.applicationContext!!).getUserBusTrips(trip?.id!!, model.user?.email!!) {trip1, trip2, trip3, trip4, success, message ->
+                            if(success) {
+                                val addTripIntent = Intent(activity, AddTripActivity::class.java).apply {
+                                    putExtra(NavbarActivity.TRIP, trip)
+                                    putExtra(NavbarActivity.FIRST, trip?.roundtrip ?: false)
+                                    putExtra(NavbarActivity.USER, model.user)
+                                    putExtra(TRIP_1, trip1)
+                                    putExtra(TRIP_2, trip2)
+                                    putExtra(TRIP_3, trip3)
+                                    putExtra(TRIP_4, trip4)
+                                }
+                                startActivity(addTripIntent)
+                            } else {
+                                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                            }
                         }
-                        startActivity(addTripIntent)
                     } else {
                         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
                     }
@@ -45,5 +55,12 @@ class FragmentAddTrip : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_add_trip, container, false)
+    }
+
+    companion object {
+        const val TRIP_1 = "Trip1"
+        const val TRIP_2 = "Trip2"
+        const val TRIP_3 = "Trip3"
+        const val TRIP_4 = "Trip4"
     }
 }
