@@ -366,19 +366,17 @@ class ApiClient(private val ctx: Context) {
         }
     }
 
-    fun getUserBusTrips(busTripId: Int, email: String, completion: (trips: MutableList<TaxiTrip>?, status: Boolean, message: String) -> Unit) {
+    fun getUserBusTrips(busTripId: String, email: String, completion: (trip1: TaxiTrip?, trip2: TaxiTrip?, trip3: TaxiTrip? , trip4: TaxiTrip?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetUserBusTrips(busTripId, email, ctx)
         this.performRequest(route) {success, response ->
             if(success) {
-                var trips: MutableList<TaxiTrip>? = mutableListOf()
-                var trips_json: JSONArray = response.json.getJSONArray("trips")
-                for (i in 0 until trips_json.length()) {
-                    val trip: TaxiTrip = Gson().fromJson(trips_json.getJSONObject(i).toString(), TaxiTrip::class.java)
-                    trips?.add(trip)
-                }
-                completion.invoke(trips, success, "User rides fetched")
+                val trip1: TaxiTrip? = if(response.json.getJSONArray("trip1").length() > 0) Gson().fromJson(response.json.getJSONArray("trip1").getJSONObject(0).toString(), TaxiTrip::class.java) else null
+                val trip2: TaxiTrip? = if(response.json.getJSONArray("trip2").length() > 0) Gson().fromJson(response.json.getJSONArray("trip2").getJSONObject(0).toString(), TaxiTrip::class.java) else null
+                val trip3: TaxiTrip? = if(response.json.getJSONArray("trip3").length() > 0) Gson().fromJson(response.json.getJSONArray("trip3").getJSONObject(0).toString(), TaxiTrip::class.java) else null
+                val trip4: TaxiTrip? = if(response.json.getJSONArray("trip4").length() > 0) Gson().fromJson(response.json.getJSONArray("trip4").getJSONObject(0).toString(), TaxiTrip::class.java) else null
+                completion.invoke(trip1, trip2, trip3, trip4, success, "User rides fetched")
             } else {
-                completion.invoke(null, success, response.message)
+                completion.invoke(null, null, null, null, success, response.message)
             }
         }
     }
