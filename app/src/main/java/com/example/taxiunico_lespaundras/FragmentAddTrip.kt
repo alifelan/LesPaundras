@@ -31,7 +31,7 @@ class FragmentAddTrip : Fragment() {
                     if(success) {
                         val addTripIntent = Intent(activity, AddTripActivity::class.java).apply {
                             putExtra(NavbarActivity.TRIP, trip)
-                            putExtra(NavbarActivity.FIRST, true)
+                            putExtra(NavbarActivity.FIRST, trip?.roundtrip ?: false)
                             putExtra(NavbarActivity.USER, model.user)
                         }
                         startActivity(addTripIntent)
