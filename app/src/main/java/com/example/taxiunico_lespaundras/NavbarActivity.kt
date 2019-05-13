@@ -81,6 +81,16 @@ class NavbarActivity : AppCompatActivity() {
         transaction.commit()
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        fragmentManager.putFragment(outState!!, FRAGMENT, currentFragment!!)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        currentFragment = fragmentManager.getFragment(savedInstanceState!!, FRAGMENT)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navbar)
@@ -137,5 +147,6 @@ class NavbarActivity : AppCompatActivity() {
         val TRIP : String = "TRIP"
         val FIRST: String = "FIRST"
         val USER: String = "USER"
+        val FRAGMENT: String = "FRAGMENT"
     }
 }
