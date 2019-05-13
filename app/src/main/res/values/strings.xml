@@ -20,8 +20,12 @@
     </string>
     <string name="form_error">Incomplete or incorrect form data</string>
     <!-- Strings related to navigation bar -->
-    <string name="title_activity_navbar">NavbarActivity</string>
-    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_navbar">Taxi Único</string>
+    <string name="title_activity_register">Registro</string>
+    <string name="title_activity_login">Taxi Único Cliente</string>
+    <string name="title_activity_add_address">Agregar dirección</string>
+    <string name="title_activity_add_trip">Agregar viajes</string>
+    <string name="title_activity_rating">Calificación</string>
     <string name="title_home">Home</string>
     <string name="title_trips">Trips</string>
     <string name="title_account">Account</string>
@@ -57,7 +61,7 @@
     <string name="button_ok">OK</string>
     <string name="button_save_changes">Save changes</string>
     <string name="address_set">Address set success</string>
-    <string name="add_round_trip">Add roundtrip trip</string>
+    <string name="add_round_trip">Add roundtrip</string>
     <string name="back_trip">Set comeback trip</string>
     <string name="add_origin">Add origin address</string>
     <string name="add_destination">Add destination address</string>

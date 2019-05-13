@@ -33,28 +33,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/home_view_map"
-            app:layout_constraintBottom_toTopOf="@id/home_text_yourDriver"
+            app:layout_constraintBottom_toTopOf="@id/home_text_dest"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/home_text_separator"
+            app:layout_constraintRight_toRightOf="parent"
     />
-    <TextView
-            android:id="@+id/home_text_separator"
-            android:text=" - "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/home_view_map"
-            app:layout_constraintBottom_toTopOf="@id/home_text_yourDriver"
-            app:layout_constraintLeft_toRightOf="@id/home_text_src"
-            app:layout_constraintRight_toLeftOf="@id/home_text_dest"
-    />
+
     <TextView
             android:id="@+id/home_text_dest"
             android:text="@string/home_detail_dest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/home_view_map"
+            app:layout_constraintTop_toBottomOf="@id/home_text_src"
             app:layout_constraintBottom_toTopOf="@id/home_text_yourDriver"
-            app:layout_constraintLeft_toRightOf="@id/home_text_separator"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
     />
 
@@ -64,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:layout_constraintTop_toBottomOf="@id/home_text_src"
+            app:layout_constraintTop_toBottomOf="@id/home_text_dest"
             app:layout_constraintBottom_toTopOf="@id/home_text_driver_info"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

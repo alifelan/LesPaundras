@@ -73,8 +73,8 @@ class FragmentHome : Fragment() {
         if(!current) {
             home_text_title.text = "Next trip"
         }
-        home_text_src.text = trip.origin.name
-        home_text_dest.text = trip.destination.name
+        home_text_src.text = "Source: " + trip.origin.name
+        home_text_dest.text = "Destination: " + trip.destination.name
         home_text_driver_info_name.text = trip.taxi.driverName
         home_text_driver_info_brand.text = trip.taxi.brand
         home_text_driver_info_model.text = trip.taxi.model

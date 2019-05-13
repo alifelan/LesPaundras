@@ -11,23 +11,6 @@
               android:paddingTop="@dimen/activity_vertical_margin"
               tools:context=".LoginActivity">
 
-    <Button android:id="@+id/button_code"
-            style="?android:textAppearanceSmall"
-            android:text="@string/generate_trip_code"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    <TextView
-            android:id="@+id/text_code"
-            android:text="@string/trip_code"
-            android:textIsSelectable="true"
-            style="@style/TextAppearance.AppCompat.Display1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"/>
-
     <!-- Login progress -->
     <ProgressBar
             android:id="@+id/login_progress"

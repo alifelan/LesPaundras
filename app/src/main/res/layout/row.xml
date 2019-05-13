@@ -17,6 +17,7 @@
     <TextView
             android:id="@+id/row_text_price"
             android:text="@string/row_price"
+            android:textAlignment="viewEnd"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintHorizontal_weight="1"

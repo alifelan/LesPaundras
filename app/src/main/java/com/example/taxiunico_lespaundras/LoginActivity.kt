@@ -72,12 +72,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                 loginCall(sharedPref.getString(getString(R.string.email_key), " "), sharedPref.getString(getString(R.string.password_key), " "))
             }
         }
-       // Generate travel code and put it in textView and in clipboard
-        button_code.setOnClickListener {
-            ApiClient(this).getRandomBusTrip{ id, _ ->
-                text_code.text = id
-            }
-        }
 
         // Set up the login form.
         populateAutoComplete()

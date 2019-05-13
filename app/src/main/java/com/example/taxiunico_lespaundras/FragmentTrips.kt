@@ -99,7 +99,7 @@ class FragmentTrips : Fragment(), UpdateClickListener {
     override fun onUpdateClickListener(trip: TaxiTrip) {
         updateTrip = trip
         val updateAddressIntent = Intent(activity, AddAddressActivity::class.java).apply {
-            putExtra(AddTripActivity.SRCDEST, "update")
+            putExtra(AddTripActivity.SRCDEST, "updated")
         }
         startActivityForResult(updateAddressIntent, ADDRESS_UPDATE)
     }

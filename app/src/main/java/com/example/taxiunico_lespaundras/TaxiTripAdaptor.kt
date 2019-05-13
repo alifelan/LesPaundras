@@ -46,15 +46,20 @@ class TaxiTripAdaptor(private val context: Context, private val trips: MutableLi
 
     inner class TaxiTripViewHolder(override val containerView: View) : LayoutContainer {
         fun bind(trip: TaxiTrip) {
-            row_text_trip_code.text = trip.busTrip.id
-            row_text_price.text = trip.price.toString()
-            row_text_src_dest.text = "${trip.origin.name}-${trip.destination.name}"
-            row_text_src_address.text = trip.origin.address
-            row_text_dest_address.text = trip.destination.address
-            row_text_date.text = trip.date
+            row_text_trip_code.text = "Trip code: ${trip.busTrip.id}"
+            row_text_price.text = "$${trip.price}"
+            row_text_src_dest.text = "${trip.busTrip.origin.city} - ${trip.busTrip.destination.city}"
+            row_text_src_address.text = "Source: " + trip.origin.address + ", " + trip.origin.city
+            row_text_dest_address.text = "Destination: " + trip.destination.address + ", " + trip.destination.city
+            row_text_date.text = trip.departureDate
             row_text_driver.text = trip.taxi.driverName
             row_text_driver_plate.text = trip.taxi.plate
-            row_text_status.text = trip.status
+            row_text_status.text = "Status: ${when(trip.status) {
+                "CA" -> "Cancelled"
+                "PE" -> "Pending"
+                "AC" -> "Active"
+                else -> "Completed"
+            }}"
         }
     }
 }

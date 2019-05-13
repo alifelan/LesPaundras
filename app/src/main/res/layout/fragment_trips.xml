@@ -19,6 +19,7 @@
     <TextView
             android:id="@+id/trips_text_past_trips"
             android:text="@string/trips_past_trips"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/trips_title"
@@ -39,6 +40,7 @@
     <TextView
             android:id="@+id/trips_text_upcoming_trips"
             android:text="@string/trips_upcoming_trips"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/trips_list_past"
