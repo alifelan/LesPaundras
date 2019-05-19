@@ -25,12 +25,15 @@ package com.example.taxiunico_lespaundras
 
 import ApiUtility.*
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_add_trip.*
 import kotlinx.android.synthetic.main.fragment_add_trip.*
 
@@ -130,6 +133,10 @@ class AddTripActivity : AppCompatActivity() {
         }
 
         add_trip_activity_button_ok.setOnClickListener {
+            if(!isNetworkAvailable()) {
+                Toast.makeText(this@AddTripActivity, R.string.internet_status, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             if (source != null) {
                 ApiClient(this).getDirections(
                     source?.address!!,
@@ -265,6 +272,12 @@ class AddTripActivity : AppCompatActivity() {
         } else {
             add_trip_activity_button_cancel_dest_address.visibility = View.VISIBLE
         }
+    }
+
+    fun isNetworkAvailable(): Boolean {
+        val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val info = manager.activeNetworkInfo
+        return info != null && info.isConnected
     }
 
     // back button

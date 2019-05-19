@@ -82,4 +82,5 @@
     <string name="button_cancel">Cancel</string>
     <string name="address_success">Address set</string>
     <string name="trip_exists">Trip already exists</string>
+    <string name="internet_status">Internet not available</string>
 </resources>
