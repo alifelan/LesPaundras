@@ -207,8 +207,8 @@ class ApiClient(private val ctx: Context) {
     fun getCoordinates(address: String, completion: (coord: LatLng?, status: Boolean, message: String) -> Unit) {
         val route = ApiRoute.GetGeoCoding(address, ctx)
         this.performRequest(route) { success, response ->
-            val results = response.json.getJSONArray("results")
             if (success && response.json.getString("status") == "OK") {
+                val results = response.json.getJSONArray("results")
                 val geometry = results.getJSONObject(0).getJSONObject("geometry")
                 val location = geometry.getJSONObject("location")
                 val lat = location.getDouble("lat")
